@@ -13,7 +13,7 @@ public class UiSlider extends UiComponent {
 	
 	private UiButton slide;
 	private UiConstraint slideConstraints;
-	
+		
 	public UiSlider(UiConstraint constraints, Direction alignment) {
 		super(constraints);
 		
@@ -39,7 +39,6 @@ public class UiSlider extends UiComponent {
 		}
 		
 		slide = new UiButton(slideConstraints);
-		
 	}
 	
 	@Override
@@ -88,6 +87,22 @@ public class UiSlider extends UiComponent {
 	@Override
 	public void deselect() {
 		slide.deselect();
+	}
+	
+	public void slide(float slideDistance) {
+		float newPos;
+				
+		switch(alignment) {
+		case VERTICAL:			
+			newPos = Math.max(Math.min((float)(slideConstraints.getY() - getY()) / getHeight() + slideDistance, 0.5f), -0.5f);
+			slideConstraints.setY(new RelativeConstraint(null, this, newPos, false));
+			break;
+		case HORIZONTAL:
+			newPos = Math.max(Math.min((float)(slideConstraints.getX() - getX()) / getWidth() + slideDistance, 0.5f), -0.5f);
+			slideConstraints.setX(new RelativeConstraint(null, this, newPos));
+			break;
+		}
+		
 	}
 	
 	public float getSliderPosition() {

@@ -66,6 +66,10 @@ public class UiThread extends Thread {
 				
 				screen.hover(pointer.getX(), pointer.getY());
 				
+				if(pointer.getWheelRotation() != 0) {
+					screen.scroll(pointer.getWheelRotation());
+				}
+				
 				if(wasSelecting != pointer.isSelecting()) {
 					if(wasSelecting) {
 						screen.deselect();

@@ -11,10 +11,19 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	private int mx;
 	private int my;
 	
+	private static final int WHEEL_TIMER_DELAY = 25000000;
+	private boolean wheelActive;
+	private long lastWheelActionTime;
+	
+	private int wheelRotation;
+	
 	private boolean isPressed;
 	
 	public Mouse() {
-		mx = my = 0;
+		mx = my = wheelRotation = 0;
+		
+		wheelActive = false;
+		lastWheelActionTime = 0;
 		
 		isPressed = false;
 	}
@@ -46,7 +55,10 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		
+		wheelRotation = e.getWheelRotation();
+
+		wheelActive = true;
+		lastWheelActionTime = System.nanoTime();
 	}
 
 	public void mouseClicked(MouseEvent e) {}
@@ -61,6 +73,13 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	
 	public int my() {
 		return my;
+	}
+	
+	public int wheelRotation() {
+		int temp = wheelRotation;
+		wheelRotation = 0;
+		
+		return temp;
 	}
 	
 	public boolean isPressed() {

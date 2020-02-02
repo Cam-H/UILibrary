@@ -60,6 +60,16 @@ public class Screen {
 		}
 	}
 	
+	public void scroll(int wheelRotation) {
+		if(!visible) {
+			return;
+		}
+		
+		for(UiPanel panel : panels) {
+			panel.scroll(wheelRotation);
+		}
+	}
+	
 	public void select() {
 		if(!visible) {
 			return;

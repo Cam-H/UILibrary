@@ -122,6 +122,10 @@ public class ScrollLayout extends LinearLayout {
 
 	}
 	
+	public void scroll(int wheelRotation) {
+		slider.slide(wheelRotation / 10f);
+	}
+	
 	@Override
 	public List<UiComponent> getGeneratedComponents() {
 		return new ArrayList<>(Arrays.asList(slider));

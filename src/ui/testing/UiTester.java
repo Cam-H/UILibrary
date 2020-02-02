@@ -89,13 +89,13 @@ public class UiTester extends Thread {
 		ui2.addUiComponent(new UiButton(null));
 		
 		UiTextField t1 = new UiTextField(null, "");
-		t1.setPlaceholder("awdayui");
+		t1.setPlaceholder("textfield");
 		t1.setLanguage(new Japanese());
 		ui2.addUiComponent(t1);
 
 		ui3.setLayout(new LinearLayout(Direction.VERTICAL, 0.05f, 0.025f));
 		ui3.addComponentBevel(5);
-		ui3.addUiComponent(new UiTextArea(null, "Last, but not the least, the library should be constantly updated and optimized. Documentation is important. If the library is not documented well, you may totally forget a function you programmed a year ago. Proper package names should be used to indicate the function of classes and methods. For example, you can name first layer of the packages by following the package names of standard Java library: programcreek.util, programcreek.io, programcreek.math, programcreek.text, etc. You domain specific knowledge then can be used in the next level. In addition, always do enough research first and make sure there is no implements of what you want to do before you start program anything. Libraries from industry utilizes the power of thousands of smart developers."));
+		ui3.addUiComponent(new UiTextArea(null, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."));
 		
 		mainScreen.addUiPanel(ui1);
 		uir.addScreen(mainScreen);
@@ -121,7 +121,7 @@ public class UiTester extends Thread {
 
 			mr.render();
 			
-			uit.updatePointer(new Pointer(window.getMouse().mx(), window.getMouse().my(), window.getMouse().isPressed()));
+			uit.updatePointer(new Pointer(window.getMouse().mx(), window.getMouse().my(), window.getMouse().wheelRotation(), window.getMouse().isPressed()));
 			Object[] set = window.getKeyboard().getKeyPresses().toArray();
 			
 			int[] keyPresses = new int[set.length];

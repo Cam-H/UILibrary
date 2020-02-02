@@ -10,6 +10,7 @@ import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
 import ui.layouts.FloatLayout;
 import ui.layouts.Layout;
+import ui.layouts.ScrollLayout;
 import ui.text.Alignment;
 import ui.transitions.UiTransition;
 
@@ -160,12 +161,31 @@ public class UiPanel extends UiComponent {
 		for(UiComponent component : components) {
 			component.hover(px, py, bounds);
 		}
+		
+		super.hover(px, py);
 	}
 	
 	@Override
 	public void hover(int px, int py, UiContainer container) {
 		hover(px, py);
 	}
+	
+	public void scroll(int wheelRotation) {
+		if(visibility != Visibility.VISIBLE) {
+			return;
+		}
+				
+		for(UiComponent component : components) {
+			if(component instanceof UiPanel) {
+				((UiPanel)component).scroll(wheelRotation);
+			}
+		}
+				
+		if(layout instanceof ScrollLayout && hovered) {
+			((ScrollLayout)layout).scroll(wheelRotation);
+		}
+	}
+	
 	
 	@Override
 	public void select() {

@@ -22,6 +22,7 @@ public class UiComponent implements UiContainer {
 	protected UiTransition transitions;
 	
 	protected boolean hovered;
+	protected boolean selected;
 	
 	private int bevel;
 	
@@ -33,7 +34,7 @@ public class UiComponent implements UiContainer {
 		
 		visibility = Visibility.VISIBLE;
 		
-		hovered = false;
+		hovered = selected = false;
 		
 		bevel = 0;
 		
@@ -120,9 +121,15 @@ public class UiComponent implements UiContainer {
 	}
 
 	
-	public void select() {}
+	public void select() {
+		if(hovered) {
+			selected = true;
+		}
+	}
 	
-	public void deselect() {}
+	public void deselect() {
+		selected = false;
+	}
 	
 	public void runTransition() {
 		transitions.run(hovered);

@@ -12,7 +12,6 @@ public class UiButton extends UiComponent {
 
 	protected UiLabel label;
 	
-	protected boolean selected;
 	protected boolean checked;
 	
 	protected boolean locked;
@@ -26,7 +25,6 @@ public class UiButton extends UiComponent {
 		
 		label = new UiLabel(constraints, title);
 		
-		selected = false;
 		checked = false;
 		
 		locked = false;
@@ -65,13 +63,6 @@ public class UiButton extends UiComponent {
 	}
 	
 	@Override
-	public void select() {
-		if(hovered) {
-			selected = true;
-		}
-	}
-	
-	@Override
 	public void deselect() {
 		if(selected) {
 			if(hovered) {
@@ -79,7 +70,7 @@ public class UiButton extends UiComponent {
 			}
 		}
 		
-		selected = false;
+		super.deselect();
 	}
 	
 	public void uncheck() {

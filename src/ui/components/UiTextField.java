@@ -5,11 +5,13 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import ui.components.UiComponent.Visibility;
 import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
 import ui.io.UiKeys;
 import ui.lang.English;
 import ui.lang.Language;
+import ui.math.UiMath;
 import ui.text.Alignment;
 import ui.transitions.UiTransition;
 
@@ -24,6 +26,8 @@ public class UiTextField extends UiLabel {
 	private boolean utf8;
 	
 	private boolean locked;
+	
+	private int textPointer;
 	
 	public UiTextField(UiConstraint constraints) {
 		this(constraints, "");
@@ -40,6 +44,8 @@ public class UiTextField extends UiLabel {
 		placeholder = "";
 		
 		locked = false;
+		
+		textPointer = -1;
 	}
 
 	public void enableUTF8() {
@@ -62,6 +68,25 @@ public class UiTextField extends UiLabel {
 		locked = false;
 	}
 	
+	public void select() {
+		if(!hovered) {
+			textPointer = -1;
+		}
+		
+		super.select();
+	}
+	
+	@Override
+	public void deselect() {
+		if(selected && !locked) {
+			if(hovered) {
+				textPointer = 0;
+			}
+		}
+		
+		super.deselect();
+	}
+	
 	public void setLanguage(Language lang) {
 		this.lang = lang;
 	}
@@ -69,8 +94,8 @@ public class UiTextField extends UiLabel {
 	@Override
 	public void update() {
 		transitions = new UiTransition();
-		
-		if(locked) {
+
+		if(locked || textPointer == -1) {
 			return;
 		}
 		
@@ -109,12 +134,18 @@ public class UiTextField extends UiLabel {
 					key += (65 <= key && key <= 97) ? (UiKeys.capsIsOn() ^ shftOn ? 0 : 32) : 0;//Handles letters
 //					key += (49 <= key && key <= 57) ? (shftOn ? -16 : 0) : 0;
 					
-					title = title + String.valueOf((char)key);
+					title = title.substring(0, textPointer) + String.valueOf((char)key) + title.substring(textPointer);
+					textPointer++;
 				}
 			}
 		}
 		
+		int preConversionLength = title.length();
 		title = lang.convert(title);
+
+		if(preConversionLength != title.length() && title.length() != 0) {
+			textPointer = preConversionLength - title.length();
+		}
 		
 //		title = title + String.valueOf((char)code);
 //				
@@ -127,7 +158,7 @@ public class UiTextField extends UiLabel {
 	
 	@Override
 	public void render(Graphics2D g, UiContainer container) {
-		
+		System.out.println(textPointer);
 		super.render(g, container);
 		
 		String title = this.title;

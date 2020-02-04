@@ -26,10 +26,6 @@ public class RelativeConstraint implements Constraint {
 	 */
 	public RelativeConstraint(UiContainer container, float ratio) {
 		this(container, null, ratio);
-		
-		if(ratio < 0) {
-			System.err.println("Warning, negative size ratio provided!");
-		}
 	}
 	
 	public RelativeConstraint(UiContainer container, float ratio, boolean axis) {

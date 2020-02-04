@@ -26,7 +26,7 @@ public class UiComponent implements UiContainer {
 	
 	private int bevel;
 	
-	private Color baseColour;
+	protected Color baseColour;
 	
 	public UiComponent(UiConstraint constraints) {
 		this.constraints = constraints;

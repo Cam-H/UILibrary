@@ -242,6 +242,10 @@ public class UiPanel extends UiComponent {
 	protected void assignBaseColour(Graphics2D g) {
 		g.setColor(UiColours.DARK_GRAY);
 		
+		if(baseColour != null) {
+			g.setColor(baseColour);
+		}
+		
 		if(hideBackground) {
 			g.setColor(UiColours.TRANSPARENT);
 		}

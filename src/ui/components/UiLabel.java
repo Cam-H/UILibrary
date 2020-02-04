@@ -13,7 +13,7 @@ import ui.graphics.UiColours;
 import ui.text.Alignment;
 
 public class UiLabel extends UiComponent {
-
+	
 	protected String title;
 	
 	protected Font font;
@@ -106,7 +106,7 @@ public class UiLabel extends UiComponent {
 		BufferedImage buffer = createBuffer(metrics, title);
 		Graphics2D bufferGraphics = prepareBufferGraphics(buffer);
 		
-		drawTextOnBuffer(buffer, bufferGraphics, title);
+		drawTextOnBuffer(buffer, bufferGraphics, title, null);
 		
 		renderBuffer(buffer, container, metrics, title, g);
 	}
@@ -125,10 +125,29 @@ public class UiLabel extends UiComponent {
 		return bufferGraphics;
 	}
 	
-	protected void drawTextOnBuffer(BufferedImage buffer, Graphics2D bufferGraphics, String txt) {
+	protected void drawTextOnBuffer(BufferedImage buffer, Graphics2D bufferGraphics, String txt, int[] selectionRange) {
 		FontMetrics metrics = bufferGraphics.getFontMetrics();
 		
-		bufferGraphics.drawString(txt, buffer.getWidth() / 2 - metrics.stringWidth(txt) / 2, metrics.getHeight() / 2 + metrics.getAscent() / 2);
+		int x = buffer.getWidth() / 2 - metrics.stringWidth(txt) / 2;
+		int height = metrics.getAscent();
+		
+		if(selectionRange != null) {
+			if(selectionRange.length == 2) {
+//				System.out.println(selectionRange[0] + " " + selectionRange[1]);
+//				System.out.println("x: " + (x + metrics.stringWidth(txt.substring(0, selectionRange[0]))) + " " + (metrics.stringWidth(txt.substring(selectionRange[1])) - metrics.stringWidth(txt.substring(0, selectionRange[0]))));
+				bufferGraphics.setColor(UiColours.BLUE);
+				bufferGraphics.fillRect(x + metrics.stringWidth(txt.substring(0, selectionRange[0])), buffer.getHeight() / 2 - height / 2, buffer.getWidth(), height);
+			}else {
+				int barWidth = 3;
+				
+				bufferGraphics.setColor(UiColours.BLACK);
+				bufferGraphics.fillRect(x + metrics.stringWidth(txt.substring(0, selectionRange[0])) - barWidth, buffer.getHeight() / 2 - height / 2, barWidth, height);
+			}
+			
+			bufferGraphics.setColor(UiColours.BLACK);
+		}
+
+		bufferGraphics.drawString(txt, x, metrics.getHeight() / 2 + height / 2);
 		
 		bufferGraphics.dispose();
 	}

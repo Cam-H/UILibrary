@@ -61,7 +61,9 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		lastWheelActionTime = System.nanoTime();
 	}
 
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		System.out.println(e.getButton());
+	}
 
 	public void mouseEntered(MouseEvent e) {}
 

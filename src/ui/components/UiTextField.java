@@ -17,6 +17,11 @@ import ui.transitions.UiTransition;
 
 public class UiTextField extends UiLabel {
 	
+	public static final int ALPHABETIC = 0;
+	public static final int NUMERIC = 1;
+	public static final int ALPHANUMERIC = 2;
+	
+	private int textType;
 	private Language lang;
 	
 	private int maxCharCount;
@@ -27,7 +32,7 @@ public class UiTextField extends UiLabel {
 	
 	private boolean locked;
 	
-	private int textPointer;
+	private int[] selectionRange;
 	
 	public UiTextField(UiConstraint constraints) {
 		this(constraints, "");
@@ -36,6 +41,7 @@ public class UiTextField extends UiLabel {
 	public UiTextField(UiConstraint constraints, String title) {
 		super(constraints, title);
 		
+		textType = ALPHANUMERIC;
 		lang = new English();
 		
 		textAlignment = Alignment.LEFT;
@@ -45,7 +51,8 @@ public class UiTextField extends UiLabel {
 		
 		locked = false;
 		
-		textPointer = -1;
+		selectionRange = null;
+		
 	}
 
 	public void enableUTF8() {
@@ -54,6 +61,10 @@ public class UiTextField extends UiLabel {
 	
 	public void disableUTF8() {
 		utf8 = false;
+	}
+	
+	public void setTextType(int textType) {
+		this.textType = textType;
 	}
 	
 	public void setPlaceholder(String placeholder) {
@@ -70,7 +81,7 @@ public class UiTextField extends UiLabel {
 	
 	public void select() {
 		if(!hovered) {
-			textPointer = -1;
+			selectionRange = null;
 		}
 		
 		super.select();
@@ -80,7 +91,11 @@ public class UiTextField extends UiLabel {
 	public void deselect() {
 		if(selected && !locked) {
 			if(hovered) {
-				textPointer = 0;
+				if(selectionRange != null) {
+					selectionRange = new int[] {title.length()};
+				}else {
+					selectionRange = new int[] {0, title.length()};
+				}
 			}
 		}
 		
@@ -95,7 +110,7 @@ public class UiTextField extends UiLabel {
 	public void update() {
 		transitions = new UiTransition();
 
-		if(locked || textPointer == -1) {
+		if(locked || selectionRange == null) {
 			return;
 		}
 		
@@ -108,7 +123,13 @@ public class UiTextField extends UiLabel {
 			switch(keyPresses[0]) {
 			case UiKeys.BCK:
 				if(title.length() > 0) {
-					title = title.substring(0, title.length() - 1);
+					if(selectionRange.length == 2) {//Delete just the selected characters
+						title = title.substring(0, selectionRange[0]) + title.substring(selectionRange[1]);
+						selectionRange = new int[] {0};
+					}else {
+						title = title.substring(0, selectionRange[0] - 1) + title.substring(selectionRange[0]);
+						selectionRange[0] = selectionRange[0] - 1;
+					}
 				}
 				break;
 			case UiKeys.DEL:
@@ -131,21 +152,33 @@ public class UiTextField extends UiLabel {
 				if(title.length() < maxCharCount) {
 					int key = keyPresses[index];
 					
+					if(48 <= key && key <= 57) {
+						if(textType == ALPHABETIC) {
+							return;
+						}
+					}else if(textType == NUMERIC) {
+						return;
+					}
+					
 					key += (65 <= key && key <= 97) ? (UiKeys.capsIsOn() ^ shftOn ? 0 : 32) : 0;//Handles letters
 //					key += (49 <= key && key <= 57) ? (shftOn ? -16 : 0) : 0;
 					
-					title = title.substring(0, textPointer) + String.valueOf((char)key) + title.substring(textPointer);
-					textPointer++;
+//					System.out.println(selectionRange[0] + " " + selectionRange[1] + " " + title.length());
+					title = title.substring(0, selectionRange[0])
+							+ String.valueOf((char)key)
+							+ title.substring((selectionRange.length == 2 ? selectionRange[1] : (selectionRange[0] < title.length() - 1 ? selectionRange[0] + 1 : selectionRange[0])));
+					selectionRange = new int[] {1 + selectionRange[0]};
+					
 				}
 			}
 		}
 		
 		int preConversionLength = title.length();
-		title = lang.convert(title);
+//		title = lang.convert(title);
 
-		if(preConversionLength != title.length() && title.length() != 0) {
-			textPointer = preConversionLength - title.length();
-		}
+//		if(preConversionLength != title.length() && title.length() != 0) {
+//			textPointer = preConversionLength - title.length();
+//		}
 		
 //		title = title + String.valueOf((char)code);
 //				
@@ -156,9 +189,14 @@ public class UiTextField extends UiLabel {
 //		}
 	}
 	
+//	public static void main(String[] args) {
+//		String test = "abcdefghij";
+//		
+//		System.out.println(test.substring(3));
+//	}
+	
 	@Override
 	public void render(Graphics2D g, UiContainer container) {
-		System.out.println(textPointer);
 		super.render(g, container);
 		
 		String title = this.title;
@@ -171,6 +209,21 @@ public class UiTextField extends UiLabel {
 			}
 		}
 		
+		if(selectionRange != null) {//Text field is active
+			g.setColor(UiColours.BLACK);
+			
+			int x = getX();
+			int y = getY();
+			
+			int width = getWidth();
+			int height = getHeight();
+
+			int bevel = getBevel(width, height);
+			width -= bevel; height -= bevel;
+
+			g.drawRect(x - width / 2, y - height / 2, width, height);
+		}
+		
 		g.setFont(font);
 		FontMetrics metrics = g.getFontMetrics();
 
@@ -181,7 +234,7 @@ public class UiTextField extends UiLabel {
 			bufferGraphics.setColor(new Color(0x999999));
 		}
 		
-		drawTextOnBuffer(buffer, bufferGraphics, title);
+		drawTextOnBuffer(buffer, bufferGraphics, title, (this.title.isEmpty() ? null : selectionRange));
 		
 		renderBuffer(buffer, container, metrics, title, g);
 	}

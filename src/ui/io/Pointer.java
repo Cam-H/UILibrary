@@ -1,5 +1,8 @@
 package ui.io;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Pointer {
 	
 	private int x;
@@ -9,7 +12,7 @@ public class Pointer {
 	
 	private double theta;
 	
-	private boolean selecting;
+	private Set<Integer> mousePresses;
 	
 	public Pointer() {
 		this(0, 0);
@@ -20,18 +23,18 @@ public class Pointer {
 	}
 	
 	public Pointer(int x, int y, double theta) {
-		this(x, y, 0, theta, false);
+		this(x, y, 0, theta, new HashSet<Integer>());
 	}
 	
-	public Pointer(int x, int y, boolean selecting) {
-		this(x, y, 0, Double.NaN, selecting);
+	public Pointer(int x, int y, Set<Integer> mousePresses) {
+		this(x, y, 0, Double.NaN, mousePresses);
 	}
 	
-	public Pointer(int x, int y, int wheelRotation, boolean selecting) {
-		this(x, y, wheelRotation, Double.NaN, selecting);
+	public Pointer(int x, int y, int wheelRotation, Set<Integer> mousePresses) {
+		this(x, y, wheelRotation, Double.NaN, mousePresses);
 	}
 	
-	public Pointer(int x, int y, int wheelRotation, double theta, boolean selecting) {
+	public Pointer(int x, int y, int wheelRotation, double theta, Set<Integer> mousePresses) {
 		this.x = x;
 		this.y = y;
 		
@@ -39,7 +42,8 @@ public class Pointer {
 		
 		this.theta = theta;
 		
-		this.selecting = selecting;
+		this.mousePresses = mousePresses;
+
 	}
 
 	public int getX() {
@@ -59,7 +63,11 @@ public class Pointer {
 	}
 	
 	public boolean isSelecting() {
-		return selecting;
+		return mousePresses.contains(1);
+	}
+	
+	public boolean wheelIsPressed() {
+		return mousePresses.contains(2);
 	}
 	
 

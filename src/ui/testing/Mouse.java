@@ -5,6 +5,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener{
 
@@ -16,8 +18,9 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	private long lastWheelActionTime;
 	
 	private int wheelRotation;
-	
-	private boolean isPressed;
+
+	private Set<Integer> mousePresses;
+
 	
 	public Mouse() {
 		mx = my = wheelRotation = 0;
@@ -25,18 +28,17 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		wheelActive = false;
 		lastWheelActionTime = 0;
 		
-		isPressed = false;
+		mousePresses = new HashSet<Integer>();
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		isPressed = true;
+		mousePresses.add(e.getButton());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		isPressed = false;
-
+		mousePresses.remove(e.getButton());
 	}
 	
 	@Override
@@ -50,7 +52,6 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	public void mouseDragged(MouseEvent e) {
 		mx = e.getX();
 		my = e.getY();
-
 	}
 	
 	@Override
@@ -61,9 +62,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		lastWheelActionTime = System.nanoTime();
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		System.out.println(e.getButton());
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	public void mouseEntered(MouseEvent e) {}
 
@@ -85,7 +84,11 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	}
 	
 	public boolean isPressed() {
-		return isPressed;
+		return mousePresses.contains(1);
 	}
 
+	public Set<Integer> mousePresses(){
+		return mousePresses;
+	}
+		
 }

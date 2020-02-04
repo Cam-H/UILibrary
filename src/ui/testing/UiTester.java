@@ -123,8 +123,8 @@ public class UiTester extends Thread {
 			try {
 				mr.render();
 			}catch(Exception e) {e.printStackTrace();}
-			
-			uit.updatePointer(new Pointer(window.getMouse().mx(), window.getMouse().my(), window.getMouse().wheelRotation(), window.getMouse().isPressed()));
+
+			uit.updatePointer(new Pointer(window.getMouse().mx(), window.getMouse().my(), window.getMouse().wheelRotation(), window.getMouse().mousePresses()));
 			Object[] set = window.getKeyboard().getKeyPresses().toArray();
 			
 			int[] keyPresses = new int[set.length];

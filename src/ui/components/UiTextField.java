@@ -106,6 +106,14 @@ public class UiTextField extends UiLabel {
 		this.lang = lang;
 	}
 	
+	public void setMaxCharCount(int maxCharCount) {
+		this.maxCharCount = maxCharCount;
+	}
+	
+	public boolean isSelected() {
+		return selectionRange != null;
+	}
+	
 	@Override
 	public void update() {
 		transitions = new UiTransition();

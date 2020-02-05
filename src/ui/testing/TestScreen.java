@@ -2,10 +2,14 @@ package ui.testing;
 
 import ui.components.UiButton;
 import ui.components.UiCheckbox;
+import ui.components.UiComponent;
+import ui.components.UiLabel;
 import ui.components.UiPanel;
+import ui.components.UiTextField;
 import ui.constraints.CenterConstraint;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
+import ui.graphics.UiColours;
 import ui.layouts.LinearLayout;
 import ui.nav.Direction;
 import ui.rendering.Screen;
@@ -51,7 +55,38 @@ public class TestScreen extends Screen {
 		mainPanel.addUiComponent(new UiCheckbox(null));
 
 		addUiPanel(mainPanel);
-				
+		
+		constraints = new UiConstraint();
+		constraints.setX(new RelativeConstraint(window, 0.2f));
+		constraints.setY(new RelativeConstraint(window, 0.5f));
+		constraints.setWidth(new RelativeConstraint(window, 0.2f));
+		constraints.setHeight(new RelativeConstraint(window, 1));
+		
+//		UiPanel toolBarPanel = new UiPanel(constraints);
+//		toolBarPanel.setBaseColour(UiColours.GREEN);
+//		addUiPanel(toolBarPanel);
+//		
+//		constraints = constraints.clone();
+//		constraints.setHeight(new RelativeConstraint(window, 0.1f));
+//		
+//		UiPanel doPanel = new UiPanel(constraints);
+//		toolBarPanel.addUiComponent(doPanel);
+//		doPanel.setLayout(new LinearLayout(Direction.HORIZONTAL, 0.1f, 0.05f));
+//		doPanel.addComponentBevel(10);
+//		doPanel.setBaseColour(UiColours.MAGENTA);
+//		
+//		doPanel.addUiComponent(new UiButton(null));
+//		doPanel.addUiComponent(new UiButton(null));
+//
+//		constraints = constraints.clone();
+//		constraints.setY(new RelativeConstraint(null, doPanel, 0.5f));
+//
+//		UiPanel rotationPanel = new UiPanel(constraints);
+//		rotationPanel.setAlignment(UiComponent.ALIGNMENT_CENTER, UiComponent.ALIGNMENT_BOTTOM);
+//		rotationPanel.setLayout(new LinearLayout(Direction.HORIZONTAL));
+//		toolBarPanel.addUiComponent(rotationPanel);
+//		rotationPanel.setBaseColour(UiColours.CYAN);
+		
 	}
 	
 	@Override

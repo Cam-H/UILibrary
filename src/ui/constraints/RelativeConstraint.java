@@ -62,7 +62,7 @@ public class RelativeConstraint implements Constraint {
 	public int getConstraint() {
 		if(axis) {
 			
-			if(relative == null) {
+			if(relative == null) {//Intended for width
 				return (int)(container.getWidth() * ratio);
 			}
 			

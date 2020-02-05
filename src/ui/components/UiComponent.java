@@ -16,11 +16,20 @@ public class UiComponent implements UiContainer {
 		VISIBLE, HIDDEN, GONE;
 	}
 	
+	public static final float ALIGNMENT_CENTER = 0;
+	public static final float ALIGNMENT_TOP = -0.5f;
+	public static final float ALIGNMENT_BOTTOM = 0.5f;
+	public static final float ALIGNMENT_LEFT = -0.5f;
+	public static final float ALIGNMENT_RIGHT = 0.5f;
+
 	protected Visibility visibility;
 	
 	protected UiConstraint constraints;
 	protected UiTransition transitions;
 	
+	protected float xAlignment;
+	protected float yAlignment;
+
 	protected boolean hovered;
 	protected boolean selected;
 	
@@ -33,6 +42,8 @@ public class UiComponent implements UiContainer {
 		transitions = new UiTransition();
 		
 		visibility = Visibility.VISIBLE;
+		
+		xAlignment = yAlignment = ALIGNMENT_CENTER;
 		
 		hovered = selected = false;
 		
@@ -47,6 +58,11 @@ public class UiComponent implements UiContainer {
 	
 	public void setTransitions(UiTransition transitions) {
 		this.transitions = transitions;
+	}
+	
+	public void setAlignment(float xAlignment, float yAlignment) {
+		this.xAlignment = xAlignment;
+		this.yAlignment = yAlignment;
 	}
 	
 	public void show() {
@@ -160,16 +176,20 @@ public class UiComponent implements UiContainer {
 		return visibility == Visibility.VISIBLE;
 	}
 	
+	public boolean isHovered() {
+		return hovered;
+	}
+	
 	public int getAlpha() {
 		return transitions.getAlpha();
 	}
 	
 	public int getX() {
-		return constraints.getX() + (int)(constraints.getWidth() * transitions.getXMultiplier());
+		return constraints.getX() + (int)(constraints.getWidth() * (xAlignment + transitions.getXMultiplier()));
 	}
 
 	public int getY() {
-		return constraints.getY() + (int)(constraints.getHeight() * transitions.getYMultiplier());
+		return constraints.getY() + (int)(constraints.getHeight() * (yAlignment + transitions.getYMultiplier()));
 	}
 
 	public int getWidth() {

@@ -11,6 +11,7 @@ import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
 import ui.layouts.LinearLayout;
+import ui.layouts.RelativeLayout;
 import ui.nav.Direction;
 import ui.rendering.Screen;
 import ui.transitions.ExpandTransition;
@@ -58,11 +59,43 @@ public class TestScreen extends Screen {
 		
 		constraints = new UiConstraint();
 		constraints.setX(new RelativeConstraint(window, 0.2f));
-		constraints.setY(new RelativeConstraint(window, 0.5f));
+		constraints.setY(new RelativeConstraint(window, 0.6f));
 		constraints.setWidth(new RelativeConstraint(window, 0.2f));
-		constraints.setHeight(new RelativeConstraint(window, 1));
+		constraints.setHeight(new RelativeConstraint(window, 0.75f));
+		
+		UiPanel toolBarPanel = new UiPanel(constraints);
+		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL));
+		toolBarPanel.setBaseColour(UiColours.GREEN);
+		addUiPanel(toolBarPanel);
+		
+		constraints = constraints.clone();
+		constraints.setHeight(new RelativeConstraint(window, 0.1f));
+		
+		UiPanel doPanel = new UiPanel(constraints);
+		toolBarPanel.addUiComponent(doPanel);
+		doPanel.setLayout(new LinearLayout(Direction.HORIZONTAL, 0.1f, 0.05f));
+		doPanel.addComponentBevel(10);
+		doPanel.setBaseColour(UiColours.MAGENTA);
+		
+		doPanel.addUiComponent(new UiButton(null));
+		doPanel.addUiComponent(new UiButton(null));
+
+		constraints = constraints.clone();
+
+		UiPanel rotationPanel = new UiPanel(constraints.clone());
+		rotationPanel.setLayout(new LinearLayout(Direction.HORIZONTAL));
+		toolBarPanel.addUiComponent(rotationPanel);
+		rotationPanel.setBaseColour(UiColours.CYAN);
+		
+		constraints = constraints.clone();
+		constraints.setHeight(new RelativeConstraint(toolBarPanel, null, 0.3f));
+		
+		UiPanel bPanel = new UiPanel(constraints);
+		bPanel.setBaseColour(UiColours.WHITE);
+		toolBarPanel.addUiComponent(bPanel);
 		
 //		UiPanel toolBarPanel = new UiPanel(constraints);
+//		toolBarPanel.setLayout(new RelativeLayout());
 //		toolBarPanel.setBaseColour(UiColours.GREEN);
 //		addUiPanel(toolBarPanel);
 //		

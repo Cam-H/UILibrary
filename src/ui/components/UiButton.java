@@ -85,6 +85,13 @@ public class UiButton extends UiComponent {
 		locked = false;
 	}
 	
+	@Override
+	public void setAlignment(float xAlignment, float yAlignment) {
+		label.setAlignment(xAlignment, yAlignment);
+		
+		super.setAlignment(xAlignment, yAlignment);
+	}
+	
 	public boolean isChecked() {
 		return checked;
 	}

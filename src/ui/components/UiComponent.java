@@ -97,7 +97,7 @@ public class UiComponent implements UiContainer {
 		int bx = Math.min(x + width / 2, cx + cWidth / 2);
 		int by = Math.min(y + height / 2, cy + cHeight / 2);
 
-		hover(px, py, (tx + bx) / 2 + (int)(constraints.getWidth() * transitions.getXMultiplier()), (ty + by) / 2 + (int)(constraints.getHeight() * transitions.getYMultiplier()), (int)(Math.max(0, bx - tx) * transitions.getWidthMultiplier()), (int)(Math.max(0, by - ty) * transitions.getHeightMultiplier()));
+		hover(px, py, (tx + bx) / 2 + (int)(constraints.getWidth() * (xAlignment + transitions.getXMultiplier())), (ty + by) / 2 + (int)(constraints.getHeight() * (yAlignment + transitions.getYMultiplier())), (int)(Math.max(0, bx - tx) * (transitions.getWidthMultiplier())), (int)(Math.max(0, by - ty) * (transitions.getHeightMultiplier())));
 
 	}
 	
@@ -228,11 +228,11 @@ public class UiComponent implements UiContainer {
 			return;
 		}
 		
-		int x = constraints.getX();
-		int y = constraints.getY();
+		int x = getX();
+		int y = getY();
 		
-		int width = constraints.getWidth();
-		int height = constraints.getHeight();
+		int width = getWidth();
+		int height = getHeight();
 		
 		int cx = container.getX();
 		int cy = container.getY();
@@ -265,8 +265,8 @@ public class UiComponent implements UiContainer {
 		assignBaseColour(g);
 		
 		//**Important to add transition effects
-		int xOff = (int)(constraints.getWidth() * transitions.getXMultiplier());
-		int yOff = (int)(constraints.getHeight() * transitions.getYMultiplier());
+		int xOff = (int)(constraints.getWidth() * (transitions.getXMultiplier()));
+		int yOff = (int)(constraints.getHeight() * (transitions.getYMultiplier()));
 		
 		int widthOff = -(int)((bx - tx) * (1 - transitions.getWidthMultiplier())) / 2;
 		int heightOff = -(int)((by - ty) * (1 - transitions.getHeightMultiplier())) / 2;

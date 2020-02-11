@@ -11,22 +11,31 @@ import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.nav.Direction;
 
-public class ScrollLayout extends LinearLayout {
+public class ScrollLayout extends RelativeLayout {
+	
+	private RelativeLayout contentLayout;
 	
 	private UiSlider slider;
 	private float sliderPosition;
 	
 	private float sliderWidth;
 	private float sliderHeight;
-
-	private float componentSize;
+	
+	private float scrollRange;
 	
 	public ScrollLayout(Direction alignment, UiContainer container) {
 		this(alignment, container, 0, 0);
 	}
 	
 	public ScrollLayout(Direction alignment, UiContainer container, float margins, float spacing) {
+		this(alignment, container, margins, spacing, -1);
+	}
+	
+	public ScrollLayout(Direction alignment, UiContainer container, float margins, float spacing, float scrollRange) {
 		super(alignment, margins, spacing);
+		
+		contentLayout = new RelativeLayout(alignment, margins, spacing);
+		setScrollRange(scrollRange);
 		
 		UiConstraint sliderConstraints = new UiConstraint();
 		
@@ -53,79 +62,91 @@ public class ScrollLayout extends LinearLayout {
 		
 		slider.setConstraints(sliderConstraints);
 		
-		componentSize = 0.2f;
-		
 	}
 	
-	public void setComponentSize(float relativeSize) {
-		this.componentSize = relativeSize;
+	public void setScrollRange(float scrollRange) {
+		if(scrollRange > 0) {
+			contentLayout = new LinearLayout(alignment, margins, spacing);
+			((LinearLayout)contentLayout).setRange(scrollRange);			
+		}
+		
+		this.scrollRange = scrollRange;
 	}
 	
 	@Override
 	public void positionComponents(UiContainer container, List<UiComponent> components) {
-
+		components.remove(slider);
+		
 		float sliderPosition = slider.getSliderPosition() + 0.5f;
-		
-		int elements = components.size();
-		
-		float x = 0;
-		float y = 0;
-		
+
 		float xOffset = 0;
 		float yOffset = 0;
 		
-		float width = 0;
-		float height = 0;
+		float scrollRange = this.scrollRange;
+		if(scrollRange == -1) {//Relative layout
+			scrollRange = margins * 2 - spacing;
+			
+			int containerWidth = container.getWidth();
+			int containerHeight = container.getHeight();
+			
+			for(UiComponent component : components) {
+				UiConstraint constraints = component.getConstraints();
+				
+				if(constraints != null) {
+					scrollRange += (alignment == Direction.VERTICAL ? (float)constraints.getHeight() / containerHeight : (float)constraints.getWidth() / containerWidth) + spacing;
+				}
+			}
+			
+			if(components.size() > 0) {
+				UiConstraint constraints = components.get(0).getConstraints();
+				
+				if(constraints != null) {
+					if(alignment == Direction.VERTICAL) {
+						yOffset += (float)constraints.getHeight() / containerHeight / 2;
+					}else {
+						xOffset += (float)constraints.getWidth() / containerWidth / 2;
+					}
+				}
+				
+			}
+//			this.scrollRange = scrollRange;
+		}
 		
+		xOffset -= (alignment == Direction.HORIZONTAL ? sliderPosition * (scrollRange - 0.99f) : 0);
+		yOffset -= (alignment == Direction.VERTICAL ? sliderPosition * (scrollRange - 0.99f) : 0);
+
+		contentLayout.positionComponents(container, components, xOffset, yOffset);
+
 		switch(alignment) {
 		case VERTICAL:
 			
-			width = 1 - margins * 2 - sliderWidth;
-			height = componentSize;
-			
-			yOffset = height + spacing;
-			
-			y += sliderPosition * Math.min(1 - margins * 2 - yOffset * (elements - 1) + spacing, 0);
+			for(UiComponent component : components) {
+				UiConstraint constraints = component.getConstraints();
+				
+				constraints.setWidth(new RelativeConstraint(container, 1f - margins * 2 - sliderWidth));
+				constraints.setX(new RelativeConstraint(null, container, -sliderWidth / 2));
+			}
 			
 			break;
 		case HORIZONTAL:
-						
-			width = componentSize;
-			height = 1 - margins * 2 - sliderHeight;
 			
-			xOffset = width + spacing;
-
+			for(UiComponent component : components) {
+				UiConstraint constraints = component.getConstraints();
+				
+				constraints.setHeight(new RelativeConstraint(container, 1f - margins * 2 - sliderHeight));
+				constraints.setY(new RelativeConstraint(null, container, -sliderHeight / 2));
+			}
+			
 			break;
 		}
 		
-		x += -0.5f + width / 2 + margins;
-		y += -0.5f + height / 2 + margins;
-				
-		for(UiComponent component : components) {
-			
-			if(component != slider) {
-				UiConstraint constraints = new UiConstraint();
-				
-				constraints.setX(new RelativeConstraint(null, container, x));
-				constraints.setY(new RelativeConstraint(null, container, y));
-				
-				constraints.setWidth(new RelativeConstraint(container, width));
-				constraints.setHeight(new RelativeConstraint(container, height));
-				
-				component.setConstraints(constraints);
-
-				x += xOffset;
-				y += yOffset;
-			}
-
-		}
-
+		components.add(slider);
 	}
 	
 	public void scroll(int wheelRotation) {
 		slider.slide(wheelRotation / 10f);
 	}
-	
+
 	@Override
 	public List<UiComponent> getGeneratedComponents() {
 		return new ArrayList<>(Arrays.asList(slider));

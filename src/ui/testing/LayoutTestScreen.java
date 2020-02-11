@@ -66,11 +66,13 @@ public class LayoutTestScreen extends Screen {
 		scrollPanel.setLayout(new ScrollLayout(Direction.VERTICAL, scrollPanel, 0.1f, 0.025f));
 		scrollPanel.addComponentBevel(10);
 		
+		UiConstraint bc = new UiConstraint(); bc.setHeight(new RelativeConstraint(scrollPanel, 0.2f));
+		
 		scrollPanel.addUiComponent(but1 = new UiButton(null, "Main"));
-		scrollPanel.addUiComponent(new UiButton(null, "X"));
+		scrollPanel.addUiComponent(new UiButton(bc, "X"));
 		scrollPanel.addUiComponent(new UiButton(null));
-		scrollPanel.addUiComponent(new UiButton(null));
-		scrollPanel.addUiComponent(new UiButton(null));
+		scrollPanel.addUiComponent(new UiButton(bc.clone()));
+		scrollPanel.addUiComponent(new UiButton(bc.clone()));
 		scrollPanel.addUiComponent(new UiCheckbox(null, "Check"));
 
 		scrollPanel.addComponentTransitions(transitions);

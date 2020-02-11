@@ -97,6 +97,19 @@ public class UiPanel extends UiComponent {
 	}
 	
 	public void addUiComponent(UiComponent component) {
+		if(layout instanceof RelativeConstraint) {
+			UiConstraint constraints = component.getConstraints();
+			
+			if(constraints == null) {
+				constraints = new UiConstraint();
+				
+				constraints.setWidth(new RelativeConstraint(this, 0.1f));
+				constraints.setHeight(new RelativeConstraint(this, 0.1f));
+				
+				component.setConstraints(constraints);
+			}
+		}
+		
 		components.add(component);
 	}
 	

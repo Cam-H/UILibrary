@@ -64,7 +64,7 @@ public class TestScreen extends Screen {
 		constraints.setHeight(new RelativeConstraint(window, 0.75f));
 		
 		UiPanel toolBarPanel = new UiPanel(constraints);
-		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL));
+		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL, 0.05f, 0.05f));
 		toolBarPanel.setBaseColour(UiColours.GREEN);
 		addUiPanel(toolBarPanel);
 		

@@ -1,6 +1,5 @@
 package ui.layouts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ui.components.UiComponent;
@@ -9,57 +8,55 @@ import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.nav.Direction;
 
-public class LinearLayout implements Layout{
-	
-	protected Direction alignment;
-	
-	protected float margins;
-	protected float spacing;
+public class LinearLayout extends RelativeLayout{
+
+	private float range;
 	
 	public LinearLayout(Direction alignment) {
 		this(alignment, 0, 0);
 	}
 	
 	public LinearLayout(Direction alignment, float margins, float spacing) {
-		this.alignment = alignment;
+		super(alignment, margins, spacing);
 		
-		this.margins = margins;
-		this.spacing = spacing;
+		range = 1f;
+	}
+	
+	public void setRange(float range) {
+		this.range = range;
 	}
 
 	@Override
 	public void positionComponents(UiContainer container, List<UiComponent> components) {
+		positionComponents(container, components, 0, 0);
+	}
+	
+	@Override
+	public void positionComponents(UiContainer container, List<UiComponent> components, float xOffset, float yOffset) {
 		
 		int elements = components.size();
-		
+
 		float x = 0;
 		float y = 0;
 		
-		float xOffset = 0;
-		float yOffset = 0;
-		
-		float width = 0;
-		float height = 0;
+		float width = getComponentWidth();
+		float height = getComponentHeight();
 		
 		switch(alignment) {
 		case VERTICAL:
+			height = (range - margins * 2 - spacing * (elements - 1)) / elements;
 			
-			width = 1 - margins * 2;
-			height = (1f - margins * 2 - spacing * (elements - 1)) / elements;
+			y = -0.5f + height / 2 + margins + yOffset;
 			
 			yOffset = height + spacing;
-			
-			y = -0.5f + height / 2 + margins;
 					
 			break;
-		case HORIZONTAL:
-						
-			width = (1f - margins * 2 - spacing * (elements - 1)) / elements;
-			height = 1 - margins * 2;
+		case HORIZONTAL:		
+			width = (range - margins * 2 - spacing * (elements - 1)) / elements;
+			
+			x = -0.5f + width / 2 + margins + xOffset;
 			
 			xOffset = width + spacing;
-			
-			x = -0.5f + width / 2 + margins;
 			
 			break;
 		}
@@ -80,29 +77,6 @@ public class LinearLayout implements Layout{
 			y += yOffset;
 
 		}
-
-	}
-	
-	@Override
-	public List<UiComponent> getGeneratedComponents() {return new ArrayList<UiComponent>();}
-
-	@Override
-	public boolean repositionIsRequired() {return false;}
-	
-	@Override
-	public UiContainer getBounds(UiContainer container) {		
-		UiConstraint bounds = new UiConstraint();
-		
-		bounds.setX(new RelativeConstraint(null, container, 0));
-		bounds.setY(new RelativeConstraint(null, container, 0));
-		bounds.setWidth(new RelativeConstraint(container, 1f - margins * 2));
-		bounds.setHeight(new RelativeConstraint(container, 1f - margins * 2));
-
-		return new UiComponent(bounds);
 		
 	}
-	
-	@Override
-	public float getMargins() {return margins;}
-	
 }

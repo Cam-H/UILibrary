@@ -87,12 +87,20 @@ public class UiConstraint {
 	public UiConstraint clone() {
 		UiConstraint clone = new UiConstraint();
 		
-		clone.setX(xConstraint.clone());
-		clone.setY(yConstraint.clone());
+		if(xConstraint != null) {
+			clone.setX(xConstraint.clone());
+		}
+		if(yConstraint != null) {
+			clone.setY(yConstraint.clone());
+		}
 		
-		clone.setWidth(widthConstraint.clone());
-		clone.setHeight(heightConstraint.clone());
-		
+		if(widthConstraint != null) {
+			clone.setWidth(widthConstraint.clone());
+		}
+		if(heightConstraint != null) {
+			clone.setHeight(heightConstraint.clone());
+		}
+
 		return clone;
 	}
 	

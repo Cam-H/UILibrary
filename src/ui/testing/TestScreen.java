@@ -23,7 +23,8 @@ public class TestScreen extends Screen {
 	private UiButton but2;
 	private UiButton but3;
 	private UiButton but4;
-
+	private UiButton but5;
+	
 	public TestScreen() {
 		super();
 		
@@ -36,6 +37,7 @@ public class TestScreen extends Screen {
 		constraints.setHeight(new RelativeConstraint(window, 0.8f));
 				
 		UiPanel mainPanel = new UiPanel(constraints);
+		mainPanel.setResizable(true);
 		mainPanel.addBevel(20);
 		mainPanel.addComponentBevel(20);
 		
@@ -51,7 +53,7 @@ public class TestScreen extends Screen {
 		mainPanel.addUiComponent(but2 = new UiButton(null, "Show Overlay"));
 		mainPanel.addUiComponent(but3 = new UiButton(null, "Hide Overlay"));
 		mainPanel.addUiComponent(but4 = new UiButton(null, "Overlay"));
-		mainPanel.addUiComponent(new UiButton(null));
+		mainPanel.addUiComponent(but5 = new UiButton(null, "LOCKED")); but5.lock();
 		mainPanel.addUiComponent(new UiButton(null));
 		mainPanel.addUiComponent(new UiCheckbox(null));
 
@@ -64,6 +66,7 @@ public class TestScreen extends Screen {
 		constraints.setHeight(new RelativeConstraint(window, 0.75f));
 		
 		UiPanel toolBarPanel = new UiPanel(constraints);
+		toolBarPanel.setResizable(true);
 		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL, 0.05f, 0.05f));
 		toolBarPanel.setBaseColour(UiColours.GREEN);
 		addUiPanel(toolBarPanel);
@@ -93,33 +96,6 @@ public class TestScreen extends Screen {
 		UiPanel bPanel = new UiPanel(constraints);
 		bPanel.setBaseColour(UiColours.WHITE);
 		toolBarPanel.addUiComponent(bPanel);
-		
-//		UiPanel toolBarPanel = new UiPanel(constraints);
-//		toolBarPanel.setLayout(new RelativeLayout());
-//		toolBarPanel.setBaseColour(UiColours.GREEN);
-//		addUiPanel(toolBarPanel);
-//		
-//		constraints = constraints.clone();
-//		constraints.setHeight(new RelativeConstraint(window, 0.1f));
-//		
-//		UiPanel doPanel = new UiPanel(constraints);
-//		toolBarPanel.addUiComponent(doPanel);
-//		doPanel.setLayout(new LinearLayout(Direction.HORIZONTAL, 0.1f, 0.05f));
-//		doPanel.addComponentBevel(10);
-//		doPanel.setBaseColour(UiColours.MAGENTA);
-//		
-//		doPanel.addUiComponent(new UiButton(null));
-//		doPanel.addUiComponent(new UiButton(null));
-//
-//		constraints = constraints.clone();
-//		constraints.setY(new RelativeConstraint(null, doPanel, 0.5f));
-//
-//		UiPanel rotationPanel = new UiPanel(constraints);
-//		rotationPanel.setAlignment(UiComponent.ALIGNMENT_CENTER, UiComponent.ALIGNMENT_BOTTOM);
-//		rotationPanel.setLayout(new LinearLayout(Direction.HORIZONTAL));
-//		toolBarPanel.addUiComponent(rotationPanel);
-//		rotationPanel.setBaseColour(UiColours.CYAN);
-		
 	}
 	
 	@Override

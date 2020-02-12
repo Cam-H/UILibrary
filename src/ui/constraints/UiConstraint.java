@@ -58,6 +58,22 @@ public class UiConstraint {
 		return heightConstraint.getConstraint();
 	}
 	
+	public Constraint getXConstraint() {
+		return xConstraint;
+	}
+	
+	public Constraint getYConstraint() {
+		return yConstraint;
+	}
+	
+	public Constraint getWidthConstraint() {
+		return widthConstraint;
+	}
+	
+	public Constraint getHeightConstraint() {
+		return heightConstraint;
+	}
+	
 	private int getXOffset(Alignment alignment) {
 		
 		switch(alignment) {

@@ -29,6 +29,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		lastWheelActionTime = 0;
 		
 		mousePresses = new HashSet<Integer>();
+		
 	}
 	
 	@Override
@@ -60,6 +61,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 
 		wheelActive = true;
 		lastWheelActionTime = System.nanoTime();
+		
 	}
 
 	public void mouseClicked(MouseEvent e) {}

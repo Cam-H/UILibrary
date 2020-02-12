@@ -46,26 +46,18 @@ public class UiButton extends UiComponent {
 	
 	@Override
 	public void hover(int px, int py) {
-		if(!locked) {
-			super.hover(px, py);
-		}else {
-			hovered = false;
-		}
+		super.hover(px, py);
 	}
 	
 	@Override
 	protected void hover(int px, int py, int x, int y, int width, int height) {
-		if(!locked) {
-			super.hover(px, py, x, y, width, height);
-		}else {
-			hovered = false;
-		}
+		super.hover(px, py, x, y, width, height);
 	}
 	
 	@Override
 	public void deselect() {
 		if(selected) {
-			if(hovered) {
+			if(hovered && !locked) {
 				checked = true;
 			}
 		}
@@ -126,11 +118,11 @@ public class UiButton extends UiComponent {
 	public void assignBaseColour(Graphics2D g) {
 		super.assignBaseColour(g);
 		
-		if(hovered) {
+		if((hovered && !locked) || (selected && locked)) {
 			g.setColor(UiColours.LIGHT_GRAY);
 		}
 		
-		if(selected) {
+		if(selected && !locked) {
 			g.setColor(UiColours.CYAN);
 		}
 				

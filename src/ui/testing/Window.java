@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
 
 import ui.components.UiContainer;
+import ui.control.UiThread;
 
 public class Window implements UiContainer{
 	
@@ -106,6 +107,7 @@ public class Window implements UiContainer{
 		
 		frame.setVisible(true);
 		
+		UiThread.setFrame(frame);
 //		if(renderer == null) {
 //			renderer = new Renderer(frame);
 //		}else {

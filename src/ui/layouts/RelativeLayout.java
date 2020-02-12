@@ -143,7 +143,6 @@ public class RelativeLayout implements Layout{
 		bounds.setHeight(new RelativeConstraint(container, 1f - margins * 2));
 
 		return new UiComponent(bounds);
-		
 	}
 	
 	@Override

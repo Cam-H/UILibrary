@@ -78,6 +78,9 @@ public class UiComponent implements UiContainer {
 	}
 	
 	public void hover(int px, int py, UiContainer container) {
+		if(visibility != Visibility.VISIBLE) {
+			return;
+		}
 		
 		int x = constraints.getX();
 		int y = constraints.getY();

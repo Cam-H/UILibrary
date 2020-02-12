@@ -69,7 +69,7 @@ public class LayoutTestScreen extends Screen {
 		UiConstraint bc = new UiConstraint(); bc.setHeight(new RelativeConstraint(scrollPanel, 0.2f));
 		
 		scrollPanel.addUiComponent(but1 = new UiButton(null, "Main"));
-		scrollPanel.addUiComponent(new UiButton(bc, "X"));
+		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
 		scrollPanel.addUiComponent(new UiButton(null));
 		scrollPanel.addUiComponent(new UiButton(bc.clone()));
 		scrollPanel.addUiComponent(new UiButton(bc.clone()));

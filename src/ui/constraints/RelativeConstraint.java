@@ -59,6 +59,10 @@ public class RelativeConstraint implements Constraint {
 		this.axis = axis;
 	}
 	
+	public void setRatio(float ratio) {
+		this.ratio = ratio;
+	}
+	
 	public int getConstraint() {
 		if(axis) {
 			
@@ -85,6 +89,12 @@ public class RelativeConstraint implements Constraint {
 		return (int)(relative.getY() - container.getY() + container.getHeight() * ratio);
 
 	}
+	
+	public float getRatio() {return ratio;}
+
+	public UiContainer getContainer() {return container;}
+	
+	public UiContainer getRelative() {return relative;}
 	
 	@Override
 	public String toString() {

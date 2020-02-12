@@ -13,7 +13,7 @@ public class PixelConstraint implements Constraint{
 	public int getConstraint() {
 		return px;
 	}
-
+	
 	@Override
 	public String toString() {
 		return Integer.toString(getConstraint());

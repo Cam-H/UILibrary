@@ -28,7 +28,7 @@ public class CenterConstraint implements Constraint{
 		
 		return container.getY() + container.getHeight() / 2;
 	}
-	
+		
 	@Override
 	public String toString() {
 		return Integer.toString(getConstraint());

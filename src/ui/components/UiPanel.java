@@ -1,12 +1,15 @@
 package ui.components;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import ui.constraints.Constraint;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
+import ui.control.UiThread;
 import ui.graphics.UiColours;
 import ui.layouts.FloatLayout;
 import ui.layouts.Layout;
@@ -27,6 +30,11 @@ public class UiPanel extends UiComponent {
 	private int componentBevel;
 	
 	private boolean hideBackground;
+	
+	private boolean resizable;
+	private boolean resizing;
+	private int px, py;
+	private int cursorType;
 	
 	public UiPanel(UiConstraint constraints) {
 		this(constraints, new ArrayList<UiComponent>());
@@ -59,7 +67,8 @@ public class UiPanel extends UiComponent {
 		componentTransitions = new UiTransition();
 		componentBevel = 0;
 		
-		hideBackground = false;
+		hideBackground = resizable = resizing = false;
+		px = py = -1;
 		
 		layout = new FloatLayout();
 	}
@@ -80,6 +89,10 @@ public class UiPanel extends UiComponent {
 			titleConstraints.setWidth(new RelativeConstraint(this, labelWidth - layout.getMargins() * 2));
 
 		}
+	}
+	
+	public void setResizable(boolean resizable) {
+		this.resizable = resizable;
 	}
 	
 	public void prepare() {
@@ -176,6 +189,135 @@ public class UiPanel extends UiComponent {
 		}
 		
 		super.hover(px, py);
+		
+		if(!resizing) {
+			this.px = this.py = -1;
+			
+			if(resizable) {
+				int x = getX();
+				int y = getY();
+				
+				int width = getWidth() / 2;
+				int height = getHeight() / 2;
+				
+				int offset = 10;
+				
+				Cursor cursor = null;
+				
+				if(Math.abs(x - width - px) < offset) {
+					
+					if(Math.abs(y - height - py) < offset) {
+						cursor = new Cursor(Cursor.NW_RESIZE_CURSOR);
+					}else if(Math.abs(y + height - py) < offset) {
+						cursor = new Cursor(Cursor.SW_RESIZE_CURSOR);
+					}else if(Math.abs(y - py) < height) {
+						cursor = new Cursor(Cursor.W_RESIZE_CURSOR);
+					}
+				}else if(Math.abs(x + width - px) < offset) {
+					if(Math.abs(y - height - py) < offset) {
+						cursor = new Cursor(Cursor.NE_RESIZE_CURSOR);
+					}else if(Math.abs(y + height - py) < offset) {
+						cursor = new Cursor(Cursor.SE_RESIZE_CURSOR);
+					}else if(Math.abs(y - py) < height) {
+						cursor = new Cursor(Cursor.E_RESIZE_CURSOR);
+					}
+				}else if(Math.abs(y - height - py) < offset) {
+					if(Math.abs(x - px) < width) {
+						cursor = new Cursor(Cursor.N_RESIZE_CURSOR);
+					}
+				}else if(Math.abs(y + height - py) < offset) {
+					if(Math.abs(x - px) < width) {
+						cursor = new Cursor(Cursor.S_RESIZE_CURSOR);
+					}
+				}
+				
+				if(cursor != null) {
+					this.px = px;
+					this.py = py;
+					
+					UiThread.setCursor(cursor);
+				}
+				
+			}
+		}else {//Resizing
+			if(this.px != -1) {//Resizing width
+				int dx = px - this.px;
+				
+				Constraint wc = constraints.getWidthConstraint();
+				
+				if(wc instanceof RelativeConstraint) {
+					RelativeConstraint widthConstraint = (RelativeConstraint)wc;
+					
+					float deltaWidthRatio = (float)(px < getX() ? -dx : dx) / widthConstraint.getContainer().getWidth();
+					
+					if(deltaWidthRatio != 0) {
+						int initialWidth = widthConstraint.getConstraint();
+						
+						widthConstraint.setRatio(widthConstraint.getRatio() + deltaWidthRatio);
+						
+						Constraint xc = constraints.getXConstraint();
+						
+						if(xc instanceof RelativeConstraint) {
+							RelativeConstraint xConstraint = (RelativeConstraint)xc;
+							
+							float offset = (widthConstraint.getConstraint() - initialWidth) / 2 * (px < getX() ? -1 : 1);
+							
+							if(xConstraint.getContainer() != null) {
+								xConstraint.setRatio(xConstraint.getRatio() + (offset / xConstraint.getContainer().getWidth()));
+							}
+							
+						}else {//X constraint is a center constraint
+							widthConstraint.setRatio(widthConstraint.getRatio() + deltaWidthRatio);
+						}
+
+					}
+					
+				}
+							
+				this.px += dx;
+			}
+			
+			if(this.py != -1) {//Resizing height
+				int dy = py - this.py;
+				
+				Constraint hc = constraints.getHeightConstraint();
+				
+				if(hc instanceof RelativeConstraint) {
+					RelativeConstraint heightConstraint = (RelativeConstraint)hc;
+					
+					float deltaHeightRatio = (float)(py < getY() ? -dy : dy) / heightConstraint.getContainer().getHeight();
+					
+					if(deltaHeightRatio != 0) {
+						int initialHeight = heightConstraint.getConstraint();
+						
+						heightConstraint.setRatio(heightConstraint.getRatio() + deltaHeightRatio);
+						
+						Constraint yc = constraints.getYConstraint();
+						
+						if(yc instanceof RelativeConstraint) {
+							RelativeConstraint yConstraint = (RelativeConstraint)yc;
+							
+							float offset = (heightConstraint.getConstraint() - initialHeight) / 2 * (py < getY() ? -1 : 1);
+							
+							if(yConstraint.getContainer() != null) {
+								yConstraint.setRatio(yConstraint.getRatio() + (offset / yConstraint.getContainer().getHeight()));
+							}
+							
+						}else {//X constraint is a center constraint
+							heightConstraint.setRatio(heightConstraint.getRatio() + deltaHeightRatio);
+						}
+
+					}
+					
+				}				
+								
+				this.py += dy;
+			}
+			
+			UiThread.setCursor(new Cursor(cursorType));
+		}
+		
+		
 	}
 	
 	@Override
@@ -206,6 +348,18 @@ public class UiPanel extends UiComponent {
 			return;
 		}
 		
+		if(px != -1 && py != -1) {
+			cursorType = UiThread.getCursor().getType();
+			
+			if(cursorType == Cursor.E_RESIZE_CURSOR || cursorType == Cursor.W_RESIZE_CURSOR) {
+				py = -1;
+			}else if(cursorType == Cursor.N_RESIZE_CURSOR || cursorType == Cursor.S_RESIZE_CURSOR) {
+				px = -1;
+			}
+			
+			resizing = true;
+		}
+		
 		for(UiComponent component : components) {
 			component.select();
 		}
@@ -213,6 +367,9 @@ public class UiPanel extends UiComponent {
 	
 	@Override
 	public void deselect() {
+		px = py = -1;
+		resizing = false;
+		
 		for(UiComponent component : components) {
 			component.deselect();
 		}

@@ -1,13 +1,19 @@
 package ui.control;
 
+import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JFrame;
 
 import ui.io.Pointer;
 import ui.rendering.Screen;
 
 public class UiThread extends Thread {
+	
+	private static JFrame frame;
+	private static Cursor cursor;
 	
 	private Pointer pointer;
 	private boolean wasSelecting;
@@ -35,6 +41,8 @@ public class UiThread extends Thread {
 	public void run() {
 		
 		while(true) {
+			
+			cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			
 			for(int i = 0; i < activeScreens.size(); i++) {
 				Screen temp = activeScreens.get(i).getNextScreen();
@@ -85,6 +93,8 @@ public class UiThread extends Thread {
 				wasSelecting = !wasSelecting;
 			}
 			
+			frame.setCursor(cursor);
+			
 			try {
 				Thread.sleep(1000 / 60);
 			} catch (InterruptedException e) {
@@ -115,6 +125,16 @@ public class UiThread extends Thread {
 		overlay.flagToPrepare();
 	}
 	
+	public static void setFrame(JFrame frame) {
+		UiThread.frame = frame;		
+	}
 	
+	public static void setCursor(Cursor cursor) {
+		UiThread.cursor = cursor;
+	}
+	
+	public static Cursor getCursor() {
+		return cursor;
+	}
 
 }

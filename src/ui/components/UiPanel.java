@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ui.constraints.Constraint;
+import ui.constraints.PixelConstraint;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.control.UiThread;
@@ -34,7 +35,19 @@ public class UiPanel extends UiComponent {
 	private boolean resizable;
 	private boolean resizing;
 	private int px, py;
+	private boolean onRight;
+	private boolean onBottom;
 	private int cursorType;
+	
+	private float resizeLowerX;
+	private float resizeUpperX;
+	
+	private float resizeLowerY;
+	private float resizeUpperY;
+	
+	
+	private boolean draggable;
+	private boolean dragging;
 	
 	public UiPanel(UiConstraint constraints) {
 		this(constraints, new ArrayList<UiComponent>());
@@ -70,6 +83,12 @@ public class UiPanel extends UiComponent {
 		hideBackground = resizable = resizing = false;
 		px = py = -1;
 		
+		onRight = onBottom = false;
+		
+		resizeLowerX = resizeUpperX = resizeLowerY = resizeUpperY = -1;
+		
+		draggable = dragging = false;
+		
 		layout = new FloatLayout();
 	}
 	
@@ -93,6 +112,36 @@ public class UiPanel extends UiComponent {
 	
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
+	}
+	
+	/**
+	 * Sets bounds on the amount of resizing possible for the panel. Calling this method automatically makes the panel resizable
+	 * <p>The amount of resizing is relative to the initial size of the panel
+	 * 
+	 * @param lowerXMultiple
+	 * @param upperXMultiple
+	 * @param lowerYMultiple
+	 * @param upperYMultiple
+	 */
+	public void setResizeBounds(float lowerXMultiple, float upperXMultiple, float lowerYMultiple, float upperYMultiple) {
+		setResizable(true);
+		
+		this.resizeLowerX = lowerXMultiple * (constraints.getWidthConstraint() instanceof RelativeConstraint ? ((RelativeConstraint)constraints.getWidthConstraint()).getRatio() : 1);
+		this.resizeUpperX = upperXMultiple * (constraints.getWidthConstraint() instanceof RelativeConstraint ? ((RelativeConstraint)constraints.getWidthConstraint()).getRatio() : 1);
+		
+		this.resizeLowerY = lowerYMultiple * (constraints.getHeightConstraint() instanceof RelativeConstraint ? ((RelativeConstraint)constraints.getHeightConstraint()).getRatio() : 1);
+		this.resizeUpperY = upperYMultiple * (constraints.getHeightConstraint() instanceof RelativeConstraint ? ((RelativeConstraint)constraints.getHeightConstraint()).getRatio() : 1);
+	}
+	
+	/**
+	 * Makes the panel draggable when pressed by the user and no components / edges are hovered.
+	 * Layouts take priority in positioning components, thus only panels inside float layouts may be dragged.
+	 * Only panel positions defined by relative or pixel constraints may be dragged.
+	 * 
+	 * @param draggable
+	 */
+	public void setDraggable(boolean draggable) {
+		this.draggable = draggable;
 	}
 	
 	public void prepare() {
@@ -190,7 +239,7 @@ public class UiPanel extends UiComponent {
 		
 		super.hover(px, py);
 		
-		if(!resizing) {
+		if(!resizing && !dragging) {
 			this.px = this.py = -1;
 			
 			if(resizable) {
@@ -239,7 +288,7 @@ public class UiPanel extends UiComponent {
 				}
 				
 			}
-		}else {//Resizing
+		}else if(resizing){//Resizing
 			if(this.px != -1) {//Resizing width
 				int dx = px - this.px;
 				
@@ -248,15 +297,24 @@ public class UiPanel extends UiComponent {
 				if(wc instanceof RelativeConstraint) {
 					RelativeConstraint widthConstraint = (RelativeConstraint)wc;
 					
-					float deltaWidthRatio = (float)(px < getX() ? -dx : dx) / widthConstraint.getContainer().getWidth();
+					float deltaWidthRatio = (float)(onRight ? dx : -dx) / widthConstraint.getContainer().getWidth();
 					
 					if(deltaWidthRatio != 0) {
 						int initialWidth = widthConstraint.getConstraint();
 						
-						widthConstraint.setRatio(widthConstraint.getRatio() + deltaWidthRatio);
-						
 						Constraint xc = constraints.getXConstraint();
 						
+						float ratio = widthConstraint.getRatio() + deltaWidthRatio * (xc instanceof RelativeConstraint ? 1 : 2);
+						
+						if(resizeUpperX != -1) {
+							ratio = Math.min(resizeUpperX, ratio);
+						}
+						
+						if(resizeLowerX != -1) {
+							ratio = Math.max(resizeLowerX, ratio);
+						}						
+						widthConstraint.setRatio(ratio);
+												
 						if(xc instanceof RelativeConstraint) {
 							RelativeConstraint xConstraint = (RelativeConstraint)xc;
 							
@@ -266,8 +324,6 @@ public class UiPanel extends UiComponent {
 								xConstraint.setRatio(xConstraint.getRatio() + (offset / xConstraint.getContainer().getWidth()));
 							}
 							
-						}else {//X constraint is a center constraint
-							widthConstraint.setRatio(widthConstraint.getRatio() + deltaWidthRatio);
 						}
 
 					}
@@ -285,14 +341,25 @@ public class UiPanel extends UiComponent {
 				if(hc instanceof RelativeConstraint) {
 					RelativeConstraint heightConstraint = (RelativeConstraint)hc;
 					
-					float deltaHeightRatio = (float)(py < getY() ? -dy : dy) / heightConstraint.getContainer().getHeight();
+					float deltaHeightRatio = (float)(onBottom ? dy : -dy) / heightConstraint.getContainer().getHeight();
 					
 					if(deltaHeightRatio != 0) {
 						int initialHeight = heightConstraint.getConstraint();
 						
-						heightConstraint.setRatio(heightConstraint.getRatio() + deltaHeightRatio);
-						
 						Constraint yc = constraints.getYConstraint();
+						
+						float ratio = heightConstraint.getRatio() + deltaHeightRatio * (yc instanceof RelativeConstraint ? 1 : 2);
+						
+						if(resizeUpperY != -1) {
+							ratio = Math.min(resizeUpperY, ratio);
+						}
+						
+						if(resizeLowerY != -1) {
+							ratio = Math.max(resizeLowerY, ratio);
+						}
+
+						heightConstraint.setRatio(ratio);
+						
 						
 						if(yc instanceof RelativeConstraint) {
 							RelativeConstraint yConstraint = (RelativeConstraint)yc;
@@ -303,8 +370,6 @@ public class UiPanel extends UiComponent {
 								yConstraint.setRatio(yConstraint.getRatio() + (offset / yConstraint.getContainer().getHeight()));
 							}
 							
-						}else {//X constraint is a center constraint
-							heightConstraint.setRatio(heightConstraint.getRatio() + deltaHeightRatio);
 						}
 
 					}
@@ -317,7 +382,35 @@ public class UiPanel extends UiComponent {
 			UiThread.setCursor(new Cursor(cursorType));
 		}
 		
-		
+		if(dragging) {
+			if(this.px != -1 && this.py != -1) {
+				int dx = px - this.px;
+				int dy = py - this.py;
+				
+				Constraint xConstraint = constraints.getXConstraint();
+				
+				if(xConstraint instanceof RelativeConstraint) {
+					((RelativeConstraint)xConstraint).setRatio(((RelativeConstraint)xConstraint).getRatio() + (float)dx / ((RelativeConstraint)xConstraint).getContainer().getWidth());
+				}else if(xConstraint instanceof PixelConstraint) {
+					constraints.setX(new PixelConstraint(xConstraint.getConstraint() + dx));
+				}
+				
+				Constraint yConstraint = constraints.getYConstraint();
+				
+				if(yConstraint instanceof RelativeConstraint) {
+					((RelativeConstraint)yConstraint).setRatio(((RelativeConstraint)yConstraint).getRatio() + (float)dy / ((RelativeConstraint)yConstraint).getContainer().getHeight());
+				}else if(yConstraint instanceof PixelConstraint) {
+					constraints.setY(new PixelConstraint(yConstraint.getConstraint() + dy));
+				}
+				
+				this.px += dx;
+				this.py += dy;
+			}else {
+				this.px = px;
+				this.py = py;
+			}
+						
+		}
 	}
 	
 	@Override
@@ -357,7 +450,24 @@ public class UiPanel extends UiComponent {
 				px = -1;
 			}
 			
+			onRight = px > getX();
+			onBottom = py > getY();
+
 			resizing = true;
+		}else if(draggable && hovered) {
+			boolean componentHovered = false;
+			
+			for(UiComponent component : components) {
+				if(component.isHovered()) {
+					componentHovered = true;
+					
+					break;
+				}
+			}
+			
+			if(!componentHovered) {
+				dragging = true;
+			}
 		}
 		
 		for(UiComponent component : components) {
@@ -369,6 +479,8 @@ public class UiPanel extends UiComponent {
 	public void deselect() {
 		px = py = -1;
 		resizing = false;
+		
+		dragging = false;
 		
 		for(UiComponent component : components) {
 			component.deselect();

@@ -7,6 +7,7 @@ import ui.components.UiLabel;
 import ui.components.UiPanel;
 import ui.components.UiTextField;
 import ui.constraints.CenterConstraint;
+import ui.constraints.PixelConstraint;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
@@ -60,13 +61,14 @@ public class TestScreen extends Screen {
 		addUiPanel(mainPanel);
 		
 		constraints = new UiConstraint();
-		constraints.setX(new RelativeConstraint(window, 0.2f));
+		constraints.setX(new RelativeConstraint(window, 0.2f));//new PixelConstraint(250)
 		constraints.setY(new RelativeConstraint(window, 0.6f));
 		constraints.setWidth(new RelativeConstraint(window, 0.2f));
 		constraints.setHeight(new RelativeConstraint(window, 0.75f));
 		
 		UiPanel toolBarPanel = new UiPanel(constraints);
-		toolBarPanel.setResizable(true);
+		toolBarPanel.setResizeBounds(0.5f, 2.0f, 1f, 1.5f);
+		toolBarPanel.setDraggable(true);
 		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL, 0.05f, 0.05f));
 		toolBarPanel.setBaseColour(UiColours.GREEN);
 		addUiPanel(toolBarPanel);

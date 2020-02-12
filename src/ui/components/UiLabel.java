@@ -141,7 +141,7 @@ public class UiLabel extends UiComponent {
 				int barWidth = 3;
 				
 				bufferGraphics.setColor(UiColours.BLACK);
-				bufferGraphics.fillRect(x + metrics.stringWidth(txt.substring(0, selectionRange[0])) - barWidth, buffer.getHeight() / 2 - height / 2, barWidth, height);
+				bufferGraphics.fillRect(x + metrics.stringWidth(txt.substring(0, selectionRange[0])) - barWidth, buffer.getHeight() / 2 - height / 2, barWidth + (selectionRange[0] == 0 ? barWidth : 0), height);
 			}
 			
 			bufferGraphics.setColor(UiColours.BLACK);

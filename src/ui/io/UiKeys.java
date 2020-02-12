@@ -39,7 +39,7 @@ public class UiKeys {
 	private static boolean keyHeld = false;
 		
 	public static void setKeysPressed(int[] keyPresses) {
-		if(UiKeys.keyPresses.length != keyPresses.length) {
+		if(getUniqueKey(keyPresses, UiKeys.keyPresses) != -1) {
 			keyUpdate = true;
 		}
 		
@@ -56,6 +56,28 @@ public class UiKeys {
 		
 		return false;
 		
+	}
+	
+	public static int getUniqueKey(int[] arr1, int[] arr2) {
+		int key = -1;
+		
+		for(int i = 0; i < arr1.length; i++) {
+			boolean sharedKey = false;
+			
+			for(int j = 0; j < arr2.length; j++) {
+				if(arr1[i] == arr2[j]) {
+					sharedKey = true;
+					break;
+				}
+			}
+			
+			if(!sharedKey) {
+				key = arr1[i];
+				break;
+			}
+		}
+		
+		return key;
 	}
 	
 	public static int[] getNextCharacters() {
@@ -83,7 +105,11 @@ public class UiKeys {
 	}
 	
 	private static int[] getTypingKeys() {
-		
+//		System.out.print("-->" );
+//		for(Integer i : keyPresses) {
+//			System.out.print(" " + (char)i.intValue());
+//		}
+//		System.out.println();
 		List<Integer> typingKeys = new ArrayList<Integer>();
 		
 		for(int keyCode : keyPresses) {
@@ -116,6 +142,12 @@ public class UiKeys {
 						}
 					}
 				}
+				break;
+			case LEFT:
+				index = 0;
+				break;
+			case RIGHT:
+				index = 0;
 				break;
 			default:
 				

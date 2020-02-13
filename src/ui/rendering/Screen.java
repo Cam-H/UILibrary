@@ -143,7 +143,7 @@ public class Screen {
 		}
 		
 		for(UiPanel panel : panels) {
-			panel.render(g);
+			panel.render(g, null);
 		}
 	}
 

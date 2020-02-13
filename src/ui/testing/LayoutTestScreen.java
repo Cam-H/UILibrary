@@ -6,6 +6,7 @@ import ui.components.UiPanel;
 import ui.constraints.CenterConstraint;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
+import ui.graphics.UiColours;
 import ui.layouts.GridLayout;
 import ui.layouts.LinearLayout;
 import ui.layouts.ScrollLayout;
@@ -68,12 +69,28 @@ public class LayoutTestScreen extends Screen {
 		
 		UiConstraint bc = new UiConstraint(); bc.setHeight(new RelativeConstraint(scrollPanel, 0.2f));
 		
-		scrollPanel.addUiComponent(but1 = new UiButton(null, "Main"));
-		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
-		scrollPanel.addUiComponent(new UiButton(null));
-		scrollPanel.addUiComponent(new UiButton(bc.clone()));
-		scrollPanel.addUiComponent(new UiButton(bc.clone()));
-		scrollPanel.addUiComponent(new UiCheckbox(null, "Check"));
+		UiConstraint gpConstraints = new UiConstraint();
+		gpConstraints.setHeight(new RelativeConstraint(window, 0.5f));
+		
+		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
+		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
+		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
+		
+//		scrollPanel.addUiComponent(but1 = new UiButton(gpConstraints.clone(), "Main"));
+//		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
+//		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
+//		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
+//		scrollPanel.addUiComponent(new UiButton(bc.clone()));
+//		scrollPanel.addUiComponent(new UiCheckbox(gpConstraints.clone(), "Check"));
+		
+		scrollPanel.setBaseColour(UiColours.MAGENTA);
+		
+//		scrollPanel.addUiComponent(but1 = new UiButton(null, "Main"));
+//		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
+//		scrollPanel.addUiComponent(new UiButton(null));
+//		scrollPanel.addUiComponent(new UiButton(bc.clone()));
+//		scrollPanel.addUiComponent(new UiButton(bc.clone()));
+//		scrollPanel.addUiComponent(new UiCheckbox(null, "Check"));
 
 		scrollPanel.addComponentTransitions(transitions);
 
@@ -86,26 +103,11 @@ public class LayoutTestScreen extends Screen {
 	public void update() {
 		super.update();
 		
-		if(but1.isChecked()) {
-			nextScreen = UiTester.mainScreen;
-			but1.uncheck();
-		}
-//		
-//		if(but2.isChecked()) {
-//			nextOverlay = UiTester.overlay;
-//			but2.uncheck();
+//		if(but1.isChecked()) {
+//			nextScreen = UiTester.mainScreen;
+//			but1.uncheck();
 //		}
-//		
-//		if(but3.isChecked()) {
-//			nextOverlay = this;
-//			but3.uncheck();
-//		}
-//		
-//		if(but4.isChecked()) {
-//			nextScreen = UiTester.overlay;
-//			but4.uncheck();
-//		}
-		
+
 	}
 	
 }

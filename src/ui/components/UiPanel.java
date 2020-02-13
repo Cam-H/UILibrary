@@ -185,7 +185,10 @@ public class UiPanel extends UiComponent {
 		}
 		
 		return components;
-		
+	}
+	
+	public List<UiComponent> getUiComponents(){
+		return components;
 	}
 	
 	public void addComponentTransitions(UiTransition transitions) {
@@ -499,13 +502,12 @@ public class UiPanel extends UiComponent {
 	}
 	
 	public void render(Graphics2D g) {
-		
 		if(visibility != Visibility.VISIBLE) {
 			return;
 		}
-		
-		super.render(g);
 
+		super.render(g);
+		
 		UiContainer bounds = layout.getBounds(this);
 
 		for(UiComponent component : components) {
@@ -517,7 +519,74 @@ public class UiPanel extends UiComponent {
 	}
 	
 	public void render(Graphics2D g, UiContainer container) {
-		render(g);
+		if(visibility != Visibility.VISIBLE) {
+			return;
+		}
+		
+		if(container != null) {
+			super.render(g, container);
+			
+			UiContainer mergedBounds = getBounds(container);
+			
+			for(UiComponent component : components) {
+				component.render(g, mergedBounds);
+			}
+			
+			titleLabel.render(g);
+		}else {
+			render(g);
+		}
+		
+//		System.out.println(container.getX() + " " + container.getHeight() + " " + (container == this));
+		
+//		render(g);
+	}
+	
+	private UiContainer getBounds(UiContainer container) {		
+		UiConstraint bounds = new UiConstraint();
+		
+		int width = container.getWidth();
+		int height = container.getHeight();
+		
+		int minX = container.getX() - width / 2;
+		int maxX = minX + width;
+		
+		int minY = container.getY() - height / 2;
+		int maxY = minY + height;
+		
+		UiContainer panelBounds = layout.getBounds(this);
+		
+		int x = panelBounds.getX();
+		int y = panelBounds.getY();
+		
+		width = panelBounds.getWidth();
+		height = panelBounds.getHeight();
+		
+		if(x - width / 2 > minX) {
+			minX = x - width / 2;
+		}
+		
+		if(x + width / 2 < maxX) {
+			maxX = x + width / 2;
+		}
+		
+		if(y - height / 2 > minY) {
+			minY = y - height / 2;
+		}
+		
+		if(y + height / 2 < maxY) {
+			maxY = y + height / 2;
+		}
+		
+		width = maxX - minX;
+		height = maxY - minY;
+		
+		bounds.setX(new PixelConstraint(minX + width / 2));
+		bounds.setY(new PixelConstraint(minY + height / 2));
+		bounds.setWidth(new PixelConstraint(width));
+		bounds.setHeight(new PixelConstraint(height));
+
+		return new UiComponent(bounds);
 	}
 	
 	@Override

@@ -84,7 +84,7 @@ public class ScrollLayout extends RelativeLayout {
 		
 		float scrollRange = this.scrollRange;
 		if(scrollRange == -1) {//Relative layout
-			scrollRange = margins * 2 - margins;
+			scrollRange = margins * 2;
 			
 			int containerWidth = container.getWidth();
 			int containerHeight = container.getHeight();
@@ -93,14 +93,14 @@ public class ScrollLayout extends RelativeLayout {
 				UiConstraint constraints = component.getConstraints();
 				
 				if(constraints != null) {
-					scrollRange += (alignment == Direction.VERTICAL ? (float)constraints.getHeight() / containerHeight : (float)constraints.getWidth() / containerWidth);
+					scrollRange += (alignment == Direction.VERTICAL ? (float)constraints.getHeight() / containerHeight : (float)constraints.getWidth() / containerWidth) + spacing;
 				}
 			}
 			
 			if(alignment == Direction.VERTICAL) {
-				yOffset += spacing;
+				yOffset += spacing * 2;
 			}else {
-				xOffset += spacing;
+				xOffset += spacing * 2;
 			}
 			
 			if(components.size() > 0) {

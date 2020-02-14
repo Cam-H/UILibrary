@@ -183,6 +183,10 @@ public class UiComponent implements UiContainer {
 		return hovered;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	
 	public int getAlpha() {
 		return transitions.getAlpha();
 	}

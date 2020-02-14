@@ -501,6 +501,24 @@ public class UiPanel extends UiComponent {
 		}
 	}
 	
+	public boolean isActive() {
+		return getActiveComponent() != null;
+	}
+	
+	public UiComponent getActiveComponent() {
+		if(!hovered) {
+			return null;
+		}
+		
+		for(UiComponent component : components) {
+			if(component.isSelected()) {
+				return component;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void render(Graphics2D g) {
 		if(visibility != Visibility.VISIBLE) {
 			return;

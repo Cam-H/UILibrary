@@ -6,6 +6,7 @@ import ui.components.UiComponent;
 import ui.components.UiLabel;
 import ui.components.UiPanel;
 import ui.components.UiTextField;
+import ui.components.UiTooltip;
 import ui.constraints.CenterConstraint;
 import ui.constraints.PixelConstraint;
 import ui.constraints.RelativeConstraint;
@@ -57,8 +58,21 @@ public class TestScreen extends Screen {
 		mainPanel.addUiComponent(but5 = new UiButton(null, "LOCKED")); but5.lock();
 		mainPanel.addUiComponent(new UiButton(null));
 		mainPanel.addUiComponent(new UiCheckbox(null));
-
+		
+		UiConstraint ttConstraints = new UiConstraint();
+		ttConstraints.setX(new PixelConstraint(100));
+		ttConstraints.setY(new PixelConstraint(100));
+		ttConstraints.setWidth(new PixelConstraint(200));
+		ttConstraints.setHeight(new PixelConstraint(300));
+		
 		addUiPanel(mainPanel);
+		
+		UiTooltip tooltip = new UiTooltip(ttConstraints);
+		addUiPanel(tooltip);
+		but5.addTooltip(tooltip);
+//		tooltip.setTrigger(UiTooltip.SELECT_TRIGGER);
+		tooltip.positionOnMouse();
+		tooltip.setDraggable(true);
 		
 		constraints = new UiConstraint();
 		constraints.setX(new RelativeConstraint(window, 0.2f));//new PixelConstraint(250)

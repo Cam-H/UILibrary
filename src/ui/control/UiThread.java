@@ -18,6 +18,8 @@ public class UiThread extends Thread {
 	private Pointer pointer;
 	private boolean wasSelecting;
 	
+	private static final int MAX_TICK_DELAY_FOR_DOUBLECLICK = 15;
+	private int tickDelay;
 	
 	private List<Screen> activeScreens;
 	
@@ -34,6 +36,8 @@ public class UiThread extends Thread {
 		
 		pointer = new Pointer();
 		wasSelecting = false;
+		
+		tickDelay = 0;
 		
 		start();
 	}
@@ -83,6 +87,11 @@ public class UiThread extends Thread {
 						screen.deselect();
 					}else {
 						screen.select();
+						
+						if(tickDelay < MAX_TICK_DELAY_FOR_DOUBLECLICK) {
+							screen.doubleClick();
+						}
+						
 					}
 				}
 				
@@ -91,6 +100,12 @@ public class UiThread extends Thread {
 			
 			if(wasSelecting != pointer.isSelecting()) {
 				wasSelecting = !wasSelecting;
+			}
+
+			if(!pointer.isSelecting()) {
+				tickDelay++;
+			}else {
+				tickDelay = 0;
 			}
 			
 			frame.setCursor(cursor);

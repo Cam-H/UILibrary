@@ -90,6 +90,16 @@ public class Screen {
 		}
 	}
 	
+	public void doubleClick() {
+		if(!visible) {
+			return;
+		}
+		
+		for(UiPanel panel : panels) {
+			panel.doubleClick();
+		}
+	}
+	
 	public void runTransitions() {
 		if(!visible) {
 			return;

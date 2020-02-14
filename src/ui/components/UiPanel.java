@@ -217,7 +217,8 @@ public class UiPanel extends UiComponent {
 	
 	@Override
 	public void update() {
-
+		super.update();
+		
 		if(layout.repositionIsRequired()) {
 			layout.positionComponents(this, getPresentUiComponents());
 		}
@@ -487,6 +488,17 @@ public class UiPanel extends UiComponent {
 		
 		for(UiComponent component : components) {
 			component.deselect();
+		}
+	}
+	
+	@Override
+	public void doubleClick() {
+		if(visibility != Visibility.VISIBLE) {
+			return;
+		}
+		
+		for(UiComponent component : components) {
+			component.doubleClick();
 		}
 	}
 	

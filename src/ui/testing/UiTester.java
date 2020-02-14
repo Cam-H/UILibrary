@@ -87,13 +87,17 @@ public class UiTester extends Thread {
 		ui2.addUiComponent(new UiCheckbox(null, "Check"));
 		ui2.addUiComponent(b3 = new UiButton(null, "Test Screen"));
 		ui2.addUiComponent(b4 = new UiButton(null, "Layout Test Screen"));
-		ui2.addUiComponent(new UiButton(null));
 		
 		UiTextField t1 = new UiTextField(null, "");
 		t1.setPlaceholder("textfield");
-		t1.setLanguage(new Japanese());
 		ui2.addUiComponent(t1);
 
+		UiTextField t2 = new UiTextField(null, "");
+		t2.setPlaceholder("lang");
+		t2.setTextType(UiTextField.ALPHABETIC);
+		t2.setLanguage(new Japanese());
+		ui2.addUiComponent(t2);
+		
 		ui3.setLayout(new LinearLayout(Direction.VERTICAL, 0.05f, 0.025f));
 		ui3.addComponentBevel(5);
 		ui3.addUiComponent(new UiTextArea(null, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."));

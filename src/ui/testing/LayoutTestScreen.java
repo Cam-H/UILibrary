@@ -64,27 +64,22 @@ public class LayoutTestScreen extends Screen {
 		UiPanel scrollPanel = new UiPanel(null);
 		mainPanel.addUiComponent(scrollPanel);
 
-		scrollPanel.setLayout(new ScrollLayout(Direction.VERTICAL, scrollPanel, 0.1f, 0.025f));
+		scrollPanel.setLayout(new ScrollLayout(Direction.VERTICAL, scrollPanel, 0.1f, 0.025f, 3f));
 		scrollPanel.addComponentBevel(10);
 		
 		UiConstraint bc = new UiConstraint(); bc.setHeight(new RelativeConstraint(scrollPanel, 0.2f));
 		
 		UiConstraint gpConstraints = new UiConstraint();
 		gpConstraints.setHeight(new RelativeConstraint(window, 0.5f));
-		
+
+		scrollPanel.addUiComponent(but1 = new UiButton(gpConstraints.clone(), "Main"));
+		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
+		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
+		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
 		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
-		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
-		scrollPanel.addUiComponent(new UiPanel(gpConstraints.clone()));
-		
-//		scrollPanel.addUiComponent(but1 = new UiButton(gpConstraints.clone(), "Main"));
-//		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
-//		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
-//		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));
-//		scrollPanel.addUiComponent(new UiButton(bc.clone()));
-//		scrollPanel.addUiComponent(new UiCheckbox(gpConstraints.clone(), "Check"));
-		
-		scrollPanel.setBaseColour(UiColours.MAGENTA);
-		
+		scrollPanel.addUiComponent(new UiButton(bc.clone()));
+		scrollPanel.addUiComponent(new UiCheckbox(gpConstraints.clone(), "Check"));
+				
 //		scrollPanel.addUiComponent(but1 = new UiButton(null, "Main"));
 //		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
 //		scrollPanel.addUiComponent(new UiButton(null));
@@ -103,10 +98,10 @@ public class LayoutTestScreen extends Screen {
 	public void update() {
 		super.update();
 		
-//		if(but1.isChecked()) {
-//			nextScreen = UiTester.mainScreen;
-//			but1.uncheck();
-//		}
+		if(but1.isChecked()) {
+			nextScreen = UiTester.mainScreen;
+			but1.uncheck();
+		}
 
 	}
 	

@@ -37,6 +37,8 @@ public class UiComponent implements UiContainer {
 	
 	protected Color baseColour;
 	
+	protected UiTooltip tooltip;
+	
 	public UiComponent(UiConstraint constraints) {
 		this.constraints = constraints;
 		transitions = new UiTransition();
@@ -50,6 +52,8 @@ public class UiComponent implements UiContainer {
 		bevel = 0;
 		
 		baseColour = null;
+		
+		tooltip = null;
 	}
 	
 	public void setConstraints(UiConstraint constraints) {
@@ -63,6 +67,12 @@ public class UiComponent implements UiContainer {
 	public void setAlignment(float xAlignment, float yAlignment) {
 		this.xAlignment = xAlignment;
 		this.yAlignment = yAlignment;
+	}
+	
+	public void addTooltip(UiTooltip tooltip) {
+		this.tooltip = tooltip;
+		
+		tooltip.setRelative(this);
 	}
 	
 	public void show() {
@@ -150,11 +160,17 @@ public class UiComponent implements UiContainer {
 		selected = false;
 	}
 	
+	public void doubleClick() {}
+	
 	public void runTransition() {
 		transitions.run(hovered);
 	}
 	
-	public void update() {}
+	public void update() {
+		if(tooltip != null) {
+			tooltip.trigger(hovered, selected);
+		}
+	}
 	
 	public void addBevel(int bevel) {
 		this.bevel = bevel;

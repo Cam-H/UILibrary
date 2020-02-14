@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import ui.components.UiComponent.Visibility;
 import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
 import ui.text.Alignment;

@@ -23,10 +23,10 @@ public class CenterConstraint implements Constraint{
 	
 	public int getConstraint() {
 		if(axis) {
-			return container.getX() + container.getWidth() / 2;
+			return container.getX();
 		}
 		
-		return container.getY() + container.getHeight() / 2;
+		return container.getY();
 	}
 		
 	@Override

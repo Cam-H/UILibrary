@@ -26,6 +26,7 @@ public class UiTextField extends UiLabel {
 	private Language lang;
 	
 	private boolean stopTypingOutsideField;
+	private int maxCharCount;
 	
 	private String placeholder;
 	
@@ -66,6 +67,8 @@ public class UiTextField extends UiLabel {
 		px = -1;
 		
 		doubleClicked = false;
+		
+		maxCharCount = -1;
 		
 	}
 
@@ -183,7 +186,10 @@ public class UiTextField extends UiLabel {
 	public void disableTypingBeyondField() {
 		stopTypingOutsideField = true;
 	}
-
+	
+	public void setMaxCharCount(int maxCharCount) {
+		this.maxCharCount = maxCharCount;
+	}
 	
 	public boolean isSelected() {
 		return selectionRange != null;
@@ -256,6 +262,10 @@ public class UiTextField extends UiLabel {
 			default:
 				index = 0;
 				break;
+			}
+			
+			if(title.length() == maxCharCount && maxCharCount != -1) {
+				return;
 			}
 			
 			if(index != -1) {

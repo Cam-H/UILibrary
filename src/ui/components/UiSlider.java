@@ -116,6 +116,10 @@ public class UiSlider extends UiComponent {
 		
 		return 0;
 	}
+	
+	public boolean isSliding() {
+		return slide.selected;
+	}
 
 	@Override
 	public void render(Graphics2D g) {

@@ -148,8 +148,16 @@ public class UiThread extends Thread {
 		UiThread.cursor = cursor;
 	}
 	
+	public static JFrame getFrame() {
+		return frame;
+	}
+	
 	public static Cursor getCursor() {
 		return cursor;
+	}
+	
+	public List<Screen> getActiveScreens() {
+		return activeScreens;
 	}
 
 }

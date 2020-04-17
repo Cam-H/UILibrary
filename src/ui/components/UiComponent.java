@@ -95,8 +95,8 @@ public class UiComponent implements UiContainer {
 		int x = constraints.getX();
 		int y = constraints.getY();
 		
-		int width = constraints.getWidth();
-		int height = constraints.getHeight();
+		int width = getWidth();
+		int height = getHeight();
 		
 		int cx = container.getX();
 		int cy = container.getY();

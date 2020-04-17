@@ -60,14 +60,14 @@ public class TestScreen extends Screen {
 		mainPanel.addUiComponent(new UiCheckbox(null));
 		
 		UiConstraint ttConstraints = new UiConstraint();
-		ttConstraints.setX(new PixelConstraint(100));
-		ttConstraints.setY(new PixelConstraint(100));
+		ttConstraints.setX(new RelativeConstraint(null, null, 1));
+		ttConstraints.setY(new RelativeConstraint(null, null, 1));
 		ttConstraints.setWidth(new PixelConstraint(200));
 		ttConstraints.setHeight(new PixelConstraint(300));
 		
 		addUiPanel(mainPanel);
 		
-		UiTooltip tooltip = new UiTooltip(ttConstraints);
+		UiTooltip tooltip = new UiTooltip(ttConstraints, "Tooltip");
 		addUiPanel(tooltip);
 		but5.addTooltip(tooltip);
 //		tooltip.setTrigger(UiTooltip.SELECT_TRIGGER);
@@ -84,7 +84,7 @@ public class TestScreen extends Screen {
 		toolBarPanel.setResizeBounds(0.5f, 2.0f, 1f, 1.5f);
 		toolBarPanel.setDraggable(true);
 		toolBarPanel.setLayout(new RelativeLayout(Direction.VERTICAL, 0.05f, 0.05f));
-		toolBarPanel.setBaseColour(UiColours.GREEN);
+		toolBarPanel.setBaseColour(UiColours.BLACK);
 		addUiPanel(toolBarPanel);
 		
 		constraints = constraints.clone();
@@ -94,7 +94,7 @@ public class TestScreen extends Screen {
 		toolBarPanel.addUiComponent(doPanel);
 		doPanel.setLayout(new LinearLayout(Direction.HORIZONTAL, 0.1f, 0.05f));
 		doPanel.addComponentBevel(10);
-		doPanel.setBaseColour(UiColours.MAGENTA);
+		doPanel.setBaseColour(UiColours.WHITE);
 		
 		doPanel.addUiComponent(new UiButton(null));
 		doPanel.addUiComponent(new UiButton(null));
@@ -104,7 +104,7 @@ public class TestScreen extends Screen {
 		UiPanel rotationPanel = new UiPanel(constraints.clone());
 		rotationPanel.setLayout(new LinearLayout(Direction.HORIZONTAL));
 		toolBarPanel.addUiComponent(rotationPanel);
-		rotationPanel.setBaseColour(UiColours.CYAN);
+		rotationPanel.setBaseColour(UiColours.WHITE);
 		
 		constraints = constraints.clone();
 		constraints.setHeight(new RelativeConstraint(toolBarPanel, null, 0.3f));

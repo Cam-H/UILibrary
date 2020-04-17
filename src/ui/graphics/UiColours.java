@@ -21,5 +21,7 @@ public class UiColours {
 	public static final Color CYAN = new Color(0x00ffff);
 	public static final Color MAGENTA = new Color(0xff00ff);
 	public static final Color YELLOW = new Color(0xffff00);
+	
+	public static final Color MAROON = new Color(0x800000);
 
 }

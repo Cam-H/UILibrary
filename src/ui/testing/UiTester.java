@@ -37,11 +37,13 @@ public class UiTester extends Thread {
 	public static  Screen testScreen;
 	public static  Screen overlay;
 	public static  Screen layoutTestScreen;
+	public static  Screen graphScreen;
 
 	private UiThread uit;
 	private UiButton b1;
 	private UiButton b3;
 	private UiButton b4;
+	private UiButton b5;
 
 	public UiTester() {
 		window = new Window(WindowMode.RESIZABLE);
@@ -87,7 +89,8 @@ public class UiTester extends Thread {
 		ui2.addUiComponent(new UiCheckbox(null, "Check"));
 		ui2.addUiComponent(b3 = new UiButton(null, "Test Screen"));
 		ui2.addUiComponent(b4 = new UiButton(null, "Layout Test Screen"));
-		
+		ui2.addUiComponent(b5 = new UiButton(null, "Graph Screen"));
+
 		UiTextField t1 = new UiTextField(null, "");
 		t1.setPlaceholder("textfield");
 		ui2.addUiComponent(t1);
@@ -107,7 +110,8 @@ public class UiTester extends Thread {
 		uir.addScreen(testScreen = new TestScreen());
 		uir.addScreen(overlay = new TestOverlayScreen());
 		uir.addScreen(layoutTestScreen = new LayoutTestScreen());
-		
+		uir.addScreen(graphScreen = new GraphScreen());
+
 		mr.setUiRenderer(uir);
 		
 		List<Screen> screens = new ArrayList<Screen>();
@@ -151,6 +155,11 @@ public class UiTester extends Thread {
 			if(b4.isChecked()) {
 				mainScreen.swapScreen(layoutTestScreen);
 				b4.uncheck();
+			}
+			
+			if(b5.isChecked()) {
+				mainScreen.swapScreen(graphScreen);
+				b5.uncheck();
 			}
 			
 			try {

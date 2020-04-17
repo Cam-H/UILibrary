@@ -20,7 +20,7 @@ import ui.transitions.UiTransition;
 
 public class UiPanel extends UiComponent {
 	
-	private Layout layout;
+	protected Layout layout;
 	
 	private List<UiComponent> components;
 	
@@ -46,8 +46,8 @@ public class UiPanel extends UiComponent {
 	private float resizeUpperY;
 	
 	
-	private boolean draggable;
-	private boolean dragging;
+	protected boolean draggable;
+	protected boolean dragging;
 	
 	public UiPanel(UiConstraint constraints) {
 		this(constraints, new ArrayList<UiComponent>());
@@ -394,7 +394,14 @@ public class UiPanel extends UiComponent {
 				Constraint xConstraint = constraints.getXConstraint();
 				
 				if(xConstraint instanceof RelativeConstraint) {
-					((RelativeConstraint)xConstraint).setRatio(((RelativeConstraint)xConstraint).getRatio() + (float)dx / ((RelativeConstraint)xConstraint).getContainer().getWidth());
+					RelativeConstraint rxc = (RelativeConstraint)xConstraint;
+
+					if(rxc.getContainer() != null) {
+						rxc.setRatio(rxc.getRatio() + (float)dx / rxc.getContainer().getWidth());
+					}else if(rxc.getRelative() != null) {
+						rxc.setRatio(rxc.getRatio() + (float)dx / rxc.getRelative().getWidth());
+					}
+					
 				}else if(xConstraint instanceof PixelConstraint) {
 					constraints.setX(new PixelConstraint(xConstraint.getConstraint() + dx));
 				}
@@ -402,7 +409,14 @@ public class UiPanel extends UiComponent {
 				Constraint yConstraint = constraints.getYConstraint();
 				
 				if(yConstraint instanceof RelativeConstraint) {
-					((RelativeConstraint)yConstraint).setRatio(((RelativeConstraint)yConstraint).getRatio() + (float)dy / ((RelativeConstraint)yConstraint).getContainer().getHeight());
+					RelativeConstraint ryc = (RelativeConstraint)yConstraint;
+
+					if(ryc.getContainer() != null) {
+						ryc.setRatio(ryc.getRatio() + (float)dy / ryc.getContainer().getHeight());
+					}else if(ryc.getRelative() != null) {
+						ryc.setRatio(ryc.getRatio() + (float)dy / ryc.getRelative().getHeight());
+					}
+
 				}else if(yConstraint instanceof PixelConstraint) {
 					constraints.setY(new PixelConstraint(yConstraint.getConstraint() + dy));
 				}
@@ -430,6 +444,8 @@ public class UiPanel extends UiComponent {
 		for(UiComponent component : components) {
 			if(component instanceof UiPanel) {
 				((UiPanel)component).scroll(wheelRotation);
+			}else if(component instanceof UiGraph2D) {
+				((UiGraph2D)component).scroll(wheelRotation);
 			}
 		}
 				

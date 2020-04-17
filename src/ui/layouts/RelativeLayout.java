@@ -80,7 +80,7 @@ public class RelativeLayout implements Layout{
 			
 			switch(alignment) {
 			case VERTICAL:
-				
+
 				constraints.setX(new RelativeConstraint(null, container, x));
 				if(i > 0) {
 					components.get(i).setAlignment(UiComponent.ALIGNMENT_CENTER, UiComponent.ALIGNMENT_BOTTOM);
@@ -93,12 +93,12 @@ public class RelativeLayout implements Layout{
 				
 				break;
 			case HORIZONTAL:
-				
+
 				if(i > 0) {
 					components.get(i).setAlignment(UiComponent.ALIGNMENT_RIGHT, UiComponent.ALIGNMENT_CENTER);
 					constraints.setX(new RelativeConstraint(null, components.get(i - 1), 0.5f + (spacing * containerWidth / components.get(i - 1).getWidth())));
 				}else {
-					constraints.setX(new RelativeConstraint(null, container, x + margins / 2));
+					constraints.setX(new RelativeConstraint(null, container, x));
 				}
 				constraints.setY(new RelativeConstraint(null, container, y));
 				

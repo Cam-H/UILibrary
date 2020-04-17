@@ -1,5 +1,6 @@
 package ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import ui.components.UiComponent.Visibility;
@@ -16,6 +17,13 @@ public class UiButton extends UiComponent {
 	
 	protected boolean locked;
 	
+	private Color highlightColour;
+	private Color selectColour;
+	
+	private Color textBaseColour;
+	private Color textHighlightColour;
+	private Color textSelectColour;
+
 	public UiButton(UiConstraint constraints) {
 		this(constraints, "");
 	}
@@ -28,6 +36,13 @@ public class UiButton extends UiComponent {
 		checked = false;
 		
 		locked = false;
+		
+		highlightColour = UiColours.LIGHT_GRAY;
+		selectColour = UiColours.CYAN;
+
+		textBaseColour = label.textColour;
+		textHighlightColour = label.textColour;
+		textSelectColour = label.textColour;
 	}
 	
 	@Override
@@ -42,6 +57,28 @@ public class UiButton extends UiComponent {
 		super.setTransitions(transitions);
 		
 		label.setTransitions(transitions);
+	}
+	
+	public void setHighlightColour(Color highlightColour) {
+		this.highlightColour = highlightColour;
+	}
+	
+	public void setSelectColour(Color selectColour) {
+		this.selectColour = selectColour;
+	}
+	
+	public void setTextColour(Color textColour) {
+		label.setTextColour(textColour);
+		
+		textBaseColour = textColour;
+	}
+	
+	public void setTextHighlightColour(Color textHighlightColour) {
+		this.textHighlightColour = textHighlightColour;
+	}
+	
+	public void setTextSelectColour(Color textSelectColour) {
+		this.textSelectColour = textSelectColour;
 	}
 	
 	@Override
@@ -118,14 +155,20 @@ public class UiButton extends UiComponent {
 	public void assignBaseColour(Graphics2D g) {
 		super.assignBaseColour(g);
 		
+		label.setTextColour(textBaseColour);
+		
 		if((hovered && !locked) || (selected && locked)) {
-			g.setColor(UiColours.LIGHT_GRAY);
+			g.setColor(highlightColour);
+			
+			label.setTextColour(textHighlightColour);
 		}
 		
 		if(selected && !locked) {
-			g.setColor(UiColours.CYAN);
+			g.setColor(selectColour);
+			
+			label.setTextColour(textSelectColour);
 		}
-				
+	
 	}
 
 }

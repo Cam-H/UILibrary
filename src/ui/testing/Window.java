@@ -39,6 +39,7 @@ public class Window implements UiContainer{
 	}
 	
 	private JFrame frame;
+	private int titleHeight;
 	
 	private MasterRenderer mr;
 	
@@ -55,7 +56,7 @@ public class Window implements UiContainer{
 	
 	public Window(WindowMode windowType) {
 		createWindow(windowType);
-		
+				
 		mr = new MasterRenderer(this);
 		
 		mouse = new Mouse();
@@ -106,6 +107,7 @@ public class Window implements UiContainer{
 		setFrameType(windowType);
 		
 		frame.setVisible(true);
+		titleHeight = frame.getInsets().top - frame.getInsets().bottom;
 		
 		UiThread.setFrame(frame);
 //		if(renderer == null) {
@@ -114,7 +116,6 @@ public class Window implements UiContainer{
 //			renderer.swapFrame(frame);
 //			renderer.unfreeze();
 //		}
-		
 	}
 	
 	private void setFrameType(WindowMode windowType) {
@@ -178,15 +179,15 @@ public class Window implements UiContainer{
 	}
 	
 	public int getHeight() {
-		return (frame != null) ? frame.getHeight() : (int)screenSize.getHeight();
+		return (frame != null) ? frame.getHeight() - titleHeight : (int)screenSize.getHeight();
 	}
 
 	public int getX() {
-		return 0;
+		return getWidth() / 2;
 	}
 
 	public int getY() {
-		return 0;
+		return getHeight() / 2 + titleHeight;
 	}
 	
 	public MasterRenderer getMasterRenderer() {

@@ -1,10 +1,13 @@
 package ui.components;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics2D;
 
 import ui.components.UiComponent.Visibility;
 import ui.constraints.UiConstraint;
+import ui.control.UiThread;
 import ui.graphics.UiColours;
 import ui.math.UiMath;
 import ui.transitions.UiTransition;
@@ -81,14 +84,26 @@ public class UiButton extends UiComponent {
 		this.textSelectColour = textSelectColour;
 	}
 	
+	public void setTextSize(int textSize) {
+		label.setTextSize(textSize);
+	}
+	
 	@Override
 	public void hover(int px, int py) {
 		super.hover(px, py);
+		
+		if(hovered) {
+			UiThread.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
 	}
 	
 	@Override
 	protected void hover(int px, int py, int x, int y, int width, int height) {
 		super.hover(px, py, x, y, width, height);
+		
+		if(hovered) {
+			UiThread.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		}
 	}
 	
 	@Override

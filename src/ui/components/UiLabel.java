@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import ui.constraints.UiConstraint;
@@ -18,6 +22,11 @@ public class UiLabel extends UiComponent {
 	protected Font font;
 	protected Color textColour;
 	
+	protected boolean renderDropShadow;
+	protected int xDrop;
+	protected int yDrop;
+	protected Color shadowColour;
+	
 	protected Alignment textAlignment;
 	
 	public UiLabel(UiConstraint constraints, String title) {
@@ -27,6 +36,8 @@ public class UiLabel extends UiComponent {
 		
 		font = new Font("TimesRoman", Font.PLAIN, 32);
 
+		renderDropShadow = false;
+		
 		textColour = UiColours.BLACK;
 		textAlignment = Alignment.CENTER;
 	}
@@ -39,12 +50,37 @@ public class UiLabel extends UiComponent {
 		this.font = font;
 	}
 	
+	public void setTextSize(int textSize) {
+		font = new Font(font.getFontName(), font.getStyle(), textSize);
+	}
+	
 	public void setTextAlignment(Alignment textAlignment) {
 		this.textAlignment = textAlignment;
 	}
 	
 	public void setText(String title) {
 		this.title = title;
+	}
+	
+	public void addDropShadow() {
+		addDropShadow(2, 2, UiColours.BLACK);
+	}
+	
+	public void addDropShadow(int xDrop, int yDrop) {
+		addDropShadow(xDrop, yDrop, UiColours.BLACK);
+	}
+	
+	public void addDropShadow(Color shadowColour) {
+		addDropShadow(2, 2, shadowColour);
+	}
+	
+	public void addDropShadow(int xDrop, int yDrop, Color shadowColour) {
+		this.xDrop = xDrop;
+		this.yDrop = yDrop;
+		
+		this.shadowColour = shadowColour;
+		
+		renderDropShadow = true;
 	}
 	
 	public String getText() {
@@ -83,7 +119,7 @@ public class UiLabel extends UiComponent {
 			xOffset += constraints.getWidth() / 2f - metrics.stringWidth(title);
 			break;
 		}
-		
+        
 		g.drawString(title, xOffset, yOffset);
 	}
 	
@@ -116,7 +152,9 @@ public class UiLabel extends UiComponent {
 	
 	protected Graphics2D prepareBufferGraphics(BufferedImage buffer) {
 		Graphics2D bufferGraphics = (Graphics2D)buffer.getGraphics();
+		
 		bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//		bufferGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		bufferGraphics.setFont(font);
 		bufferGraphics.setColor(textColour);
@@ -145,9 +183,27 @@ public class UiLabel extends UiComponent {
 			
 			bufferGraphics.setColor(UiColours.BLACK);
 		}
-
-		bufferGraphics.drawString(txt, x, metrics.getHeight() / 2 + height / 2);
 		
+		int y = metrics.getHeight() / 2 + height / 2;
+		
+		if(renderDropShadow) {
+			FontRenderContext frc = bufferGraphics.getFontRenderContext();
+			TextLayout textLayout = new TextLayout(title, font, frc);
+			
+			AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+			Shape outline = textLayout.getOutline(at);
+
+	        at.setToTranslation(x + xDrop, y + yDrop);
+	        outline = textLayout.getOutline(at);
+	        bufferGraphics.setPaint(shadowColour);
+	        bufferGraphics.fill(outline);
+	        bufferGraphics.setPaint(textColour);
+	        textLayout.draw(bufferGraphics, x, y);
+	        
+		}else {
+			bufferGraphics.drawString(txt, x, metrics.getHeight() / 2 + height / 2);
+		}
+
 		bufferGraphics.dispose();
 	}
 	

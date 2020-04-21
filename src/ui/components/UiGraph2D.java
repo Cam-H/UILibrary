@@ -101,6 +101,19 @@ public class UiGraph2D extends UiComponent {
 			if(xZoom < 0) {
 				xZoom = 0;
 			}
+			
+			if(xScrollable) {
+				int width = getWidth();
+				int px = this.px - getX();
+				
+				if(wheelRotation < 0) {//Zoom in ->
+//					xOffset += (xOffset * width - px) / 30 / width * xZoom;
+//					xOffset -= px * (xZoom - initialZoom) / xZoom / width * 2;
+
+				}else if(wheelRotation > 0) {//Zoom out ->
+					xOffset += (-xOffset * width + px) / 30 / width;
+				}
+			}
 		}
 		
 		if(yZoomable) {
@@ -108,6 +121,19 @@ public class UiGraph2D extends UiComponent {
 			
 			if(yZoom < 0) {
 				yZoom = 0;
+			}
+			
+			if(yScrollable) {
+				int height = getHeight();
+				int py = this.py - getY();
+				
+				if(wheelRotation < 0) {//Zoom in ->
+//					xOffset += (xOffset * width - px) / 30 / width * xZoom;
+//					xOffset -= px * (xZoom - initialZoom) / xZoom / width * 2;
+
+				}else if(wheelRotation > 0) {//Zoom out ->
+					yOffset += (-yOffset * height + py) / 30 / height;
+				}
 			}
 		}
 		

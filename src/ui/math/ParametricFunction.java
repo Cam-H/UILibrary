@@ -6,6 +6,11 @@ public class ParametricFunction extends Function {
 	public Point get(double t) {
 		return new Point(-1, -1);
 	}
+
+	@Override
+	public Function getDerivative() {
+		return null;
+	}
 	
 	
 }

@@ -93,6 +93,7 @@ public class UiTester extends Thread {
 
 		UiTextField t1 = new UiTextField(null, "");
 		t1.setPlaceholder("textfield");
+		t1.setBaseColour(UiColours.GREEN);
 		ui2.addUiComponent(t1);
 
 		UiTextField t2 = new UiTextField(null, "");
@@ -120,9 +121,7 @@ public class UiTester extends Thread {
 		uit = new UiThread(screens);
 		
 		
-		
 		start();
-		
 	}
 	
 	public void run() {

@@ -2,7 +2,7 @@ package ui.lang;
 
 public class Japanese implements Language {
 	
-	private static final String[][] conversions = {
+	public static final String[][] conversions = {
 			{"tsu", "つ"},
 			{"ka", "か"},
 			{"ki", "き"},

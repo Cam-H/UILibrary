@@ -10,4 +10,9 @@ public class RationalFunction extends Function {
 		return null;
 	}
 
+	@Override
+	public Function getDerivative() {
+		return null;
+	}
+
 }

@@ -49,4 +49,27 @@ public class PolynomialFunction extends Function {
 		return new Point(t, getValueAt(t));
 	}
 
+	@Override
+	public Function getDerivative() {
+		List<Double> coefficients = new ArrayList<Double>();
+		
+		for(int i = 0; i < this.coefficients.size() - 1; i++) {
+			coefficients.add(this.coefficients.get(i) * (this.coefficients.size() - i - 1));
+		}
+		
+		return new PolynomialFunction(coefficients);
+	}
+	
+	@Override
+	public String toString() {
+		return toString(0).trim();
+	}
+	
+	private String toString(int i) {
+		int power = coefficients.size() - i - 1;
+		
+		return (i == 0 ? (coefficients.get(i) < 0 ? "-" : "") : "") + (power == 0 ? (coefficients.get(i) != 0 ? String.valueOf(Math.abs(coefficients.get(i))) : "") : (Math.abs(coefficients.get(i)) == 1 ? "" : String.valueOf(Math.abs(coefficients.get(i)))) + "x" + (power == 1 ? "" : UiMath.superscript(String.valueOf(coefficients.size() - i - 1))))
+			+ (i + 1 < coefficients.size() && coefficients.get(i + 1) != 0 ? (coefficients.get(i + 1) < 0 ? " - " : " + ") : "") + (i + 1 < coefficients.size() ? toString(i + 1) : "");
+	}
+
 }

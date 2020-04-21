@@ -7,4 +7,9 @@ public class CompositeFunction extends Function {
 		return null;
 	}
 
+	@Override
+	public Function getDerivative() {
+		return null;
+	}
+
 }

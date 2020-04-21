@@ -9,4 +9,9 @@ public class ExponentialFunction extends Function {
 		return null;
 	}
 
+	@Override
+	public Function getDerivative() {
+		return null;
+	}
+
 }

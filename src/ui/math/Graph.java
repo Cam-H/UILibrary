@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import ui.graphics.UiColours;
 
 public class Graph {
@@ -22,7 +21,8 @@ public class Graph {
 	private boolean showTertiaryAxis;
 	
 	private int secondAxisOffset = 100;
-	
+	private int thirdAxisOffset = 50;
+
 	public Graph() {
 		this(new DataSet(new PolynomialFunction(new ArrayList<>(Arrays.asList(1d, 2d, 0d, 0d, 0d))), -100, 100, 0.1));
 		
@@ -78,8 +78,35 @@ public class Graph {
 				
 		bufferGraphics.translate(xOffset, yOffset);
 		
+		//Draw tertiary axis
+		if(showTertiaryAxis) {
+			bufferGraphics.setStroke(new BasicStroke(0.5f));
+			bufferGraphics.setColor(UiColours.LIGHT_GRAY);
+
+			double thirdAxisOffset = this.thirdAxisOffset * Math.pow(2, -(int)(Math.log(xScale) / Math.log(2)));
+					
+			for(int i = 1; i < (width / 2 + xOffset) / (thirdAxisOffset * xScale) + 1; i++) {
+				bufferGraphics.drawLine(cx - (int)(i * thirdAxisOffset * xScale), -yOffset, cx - (int)(i * thirdAxisOffset * xScale), height - yOffset);
+			}
+					
+			for(int i = 1; i < (width / 2 - xOffset) / (thirdAxisOffset * xScale) + 1; i++) {
+				bufferGraphics.drawLine(cx + (int)(i * thirdAxisOffset * xScale), -yOffset, cx + (int)(i * thirdAxisOffset * xScale), height - yOffset);
+			}
+					
+			thirdAxisOffset = this.thirdAxisOffset * Math.pow(2, -(int)(Math.log(yScale) / Math.log(2)));
+					
+			for(int i = 1; i < (height / 2 + yOffset) / (thirdAxisOffset * yScale) + 1; i++) {
+				bufferGraphics.drawLine(-xOffset, cy - (int)(i * thirdAxisOffset * yScale), width - xOffset, cy - (int)(i * thirdAxisOffset * yScale));
+			}
+					
+			for(int i = 1; i < (height / 2 - yOffset) / (thirdAxisOffset * yScale) + 1; i++) {
+				bufferGraphics.drawLine(-xOffset, cy + (int)(i * thirdAxisOffset * yScale), width - xOffset, cy + (int)(i * thirdAxisOffset * yScale));
+			}
+		}
+		
 		//Draw secondary axis
 		if(showSecondaryAxis) {
+			bufferGraphics.setStroke(new BasicStroke(1f));
 			bufferGraphics.setColor(UiColours.GRAY);
 			
 			FontMetrics fm = bufferGraphics.getFontMetrics();
@@ -111,7 +138,6 @@ public class Graph {
 				}else {
 					bufferGraphics.drawString(msg, cx + (int)(i * secondAxisOffset * xScale) - fm.stringWidth(msg) / 2, cy + (fm.getHeight() - fm.getDescent()));
 				}
-				
 			}
 			
 			secondAxisOffset = this.secondAxisOffset * Math.pow(2, -(int)(Math.log(yScale) / Math.log(2)));

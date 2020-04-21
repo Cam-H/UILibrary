@@ -10,6 +10,7 @@ import ui.graphics.UiColours;
 import ui.layouts.LinearLayout;
 import ui.layouts.RelativeLayout;
 import ui.math.DataSet;
+import ui.math.Function;
 import ui.math.Graph;
 import ui.math.PolynomialFunction;
 import ui.nav.Direction;
@@ -65,6 +66,11 @@ public class GraphScreen extends Screen {
 		graphic.addDataSet(d3);
 		graph.setGraph(graphic);
 		
+		Function f = new PolynomialFunction(1, 0);
+		System.out.println(f + " | " + f.getDerivative());
+		Function f2 = new PolynomialFunction(-2, -5, 3);
+		System.out.println(f2 + " | " + f2.getDerivative());
+
 //		scrollPanel.addUiComponent(exitButton = new UiButton(gpConstraints.clone(), "Main"));
 //		scrollPanel.addUiComponent(but2 = new UiButton(bc, "X"));but2.suppress();
 //		scrollPanel.addUiComponent(new UiButton(gpConstraints.clone()));

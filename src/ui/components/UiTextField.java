@@ -49,6 +49,8 @@ public class UiTextField extends UiLabel {
 	public UiTextField(UiConstraint constraints, String title) {
 		super(constraints, title);
 		
+		baseColour = UiColours.WHITE;
+		
 		textType = ALPHANUMERIC;
 		lang = new English();
 		
@@ -80,6 +82,13 @@ public class UiTextField extends UiLabel {
 //		utf8 = false;
 //	}
 	
+	@Override
+	public void setText(String title) {
+		super.setText(title);
+		
+		selectionRange = new int[] {title.length()};
+	}
+	
 	public void setTextType(int textType) {
 		this.textType = textType;
 	}
@@ -102,6 +111,10 @@ public class UiTextField extends UiLabel {
 		}
 		
 		super.select();
+	}
+	
+	public void forceSelect() {
+		selectionRange = new int[] {title.length()};
 	}
 	
 	@Override
@@ -427,6 +440,8 @@ public class UiTextField extends UiLabel {
 		
 		if(this.title.isEmpty()) {
 			bufferGraphics.setColor(new Color(0x999999));
+		}else {
+			bufferGraphics.setColor(textColour);
 		}
 		
 		drawTextOnBuffer(buffer, bufferGraphics, title, (this.title.isEmpty() ? null : selectionRange));
@@ -434,11 +449,6 @@ public class UiTextField extends UiLabel {
 		renderBuffer(buffer, container, metrics, title, g);
 		
 		this.textRender = buffer;
-	}
-	
-	@Override
-	public void assignBaseColour(Graphics2D g) {
-		g.setColor(UiColours.WHITE);		
 	}
 	
 }

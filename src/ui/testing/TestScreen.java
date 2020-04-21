@@ -56,7 +56,10 @@ public class TestScreen extends Screen {
 		mainPanel.addUiComponent(but3 = new UiButton(null, "Hide Overlay"));
 		mainPanel.addUiComponent(but4 = new UiButton(null, "Overlay"));
 		mainPanel.addUiComponent(but5 = new UiButton(null, "LOCKED")); but5.lock();
-		mainPanel.addUiComponent(new UiButton(null));
+		
+		UiButton temp = new UiButton(null, "Drop Shadow");
+		temp.getLabel().addDropShadow(); temp.setTextColour(UiColours.WHITE); temp.setTextHighlightColour(UiColours.WHITE);
+		mainPanel.addUiComponent(temp);
 		mainPanel.addUiComponent(new UiCheckbox(null));
 		
 		UiConstraint ttConstraints = new UiConstraint();

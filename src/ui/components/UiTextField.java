@@ -423,11 +423,13 @@ public class UiTextField extends UiLabel {
 			int x = getX();
 			int y = getY();
 			
-			int width = getWidth();
-			int height = getHeight();
+			int width = getWidth() - 4;
+			int height = getHeight() - 4;
 
 			int bevel = getBevel(width, height);
-			width -= bevel; height -= bevel;
+			int reduc = Math.max(6, bevel / 2);
+			
+			width -= reduc; height -= reduc;
 
 			g.drawRect(x - width / 2, y - height / 2, width, height);
 		}

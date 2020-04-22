@@ -147,7 +147,7 @@ public class UiLabel extends UiComponent {
 	}
 	
 	protected BufferedImage createBuffer(FontMetrics metrics, String txt) {
-		return new BufferedImage(metrics.stringWidth(txt), metrics.getHeight() / 2 + metrics.getAscent(), BufferedImage.TYPE_INT_ARGB);
+		return new BufferedImage(metrics.stringWidth(txt + "  "), metrics.getHeight() / 2 + metrics.getAscent(), BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	protected Graphics2D prepareBufferGraphics(BufferedImage buffer) {
@@ -164,7 +164,7 @@ public class UiLabel extends UiComponent {
 	
 	protected void drawTextOnBuffer(BufferedImage buffer, Graphics2D bufferGraphics, String txt, int[] selectionRange) {
 		FontMetrics metrics = bufferGraphics.getFontMetrics();
-		
+				
 		int x = buffer.getWidth() / 2 - metrics.stringWidth(txt) / 2;
 		int height = metrics.getAscent();
 		

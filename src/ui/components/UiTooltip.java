@@ -61,6 +61,7 @@ public class UiTooltip extends UiPanel {
 		mx = my = -1;
 		
 		titlePanel = new UiPanel(null);
+		titlePanel.setBackgroundTransparency(true);
 		addUiComponent(titlePanel);
 		
 		titlePanel.addUiComponent(titleLabel = new UiLabel(null, title));

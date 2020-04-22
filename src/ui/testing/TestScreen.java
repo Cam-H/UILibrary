@@ -5,6 +5,7 @@ import ui.components.UiCheckbox;
 import ui.components.UiComponent;
 import ui.components.UiLabel;
 import ui.components.UiPanel;
+import ui.components.UiRadioPanel;
 import ui.components.UiTextField;
 import ui.components.UiTooltip;
 import ui.constraints.CenterConstraint;
@@ -26,6 +27,8 @@ public class TestScreen extends Screen {
 	private UiButton but3;
 	private UiButton but4;
 	private UiButton but5;
+	
+	private UiRadioPanel radioPanel;
 	
 	public TestScreen() {
 		super();
@@ -60,7 +63,14 @@ public class TestScreen extends Screen {
 		UiButton temp = new UiButton(null, "Drop Shadow");
 		temp.getLabel().addDropShadow(); temp.setTextColour(UiColours.WHITE); temp.setTextHighlightColour(UiColours.WHITE);
 		mainPanel.addUiComponent(temp);
-		mainPanel.addUiComponent(new UiCheckbox(null));
+		
+		radioPanel = new UiRadioPanel(null);
+		radioPanel.setBaseColour(UiColours.YELLOW);
+		radioPanel.addUiComponent(new UiCheckbox(null, "A"));
+		radioPanel.addUiComponent(new UiCheckbox(null, "B"));
+		radioPanel.addUiComponent(new UiCheckbox(null, "C"));
+
+		mainPanel.addUiComponent(radioPanel);
 		
 		UiConstraint ttConstraints = new UiConstraint();
 		ttConstraints.setX(new RelativeConstraint(null, null, 1));

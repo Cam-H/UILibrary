@@ -227,6 +227,10 @@ public class UiComponent implements UiContainer {
 		return constraints;
 	}
 	
+	public boolean isTransparent() {
+		return baseColour == null || baseColour == UiColours.TRANSPARENT;
+	}
+	
 	public void render(Graphics2D g) {
 		
 		if(constraints == null) {

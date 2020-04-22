@@ -22,7 +22,7 @@ public class UiPanel extends UiComponent {
 	
 	protected Layout layout;
 	
-	private List<UiComponent> components;
+	protected List<UiComponent> components;
 	
 	protected UiLabel titleLabel;
 	protected static final float labelWidth = 1f;
@@ -478,7 +478,8 @@ public class UiPanel extends UiComponent {
 			boolean componentHovered = false;
 			
 			for(UiComponent component : components) {
-				if(component.isHovered()) {
+
+				if(!component.isTransparent() && component.isHovered()) {
 					componentHovered = true;
 					
 					break;
@@ -545,6 +546,11 @@ public class UiPanel extends UiComponent {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public boolean isTransparent() {
+		return super.isTransparent() || hideBackground;
 	}
 	
 	public void render(Graphics2D g) {

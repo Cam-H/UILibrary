@@ -20,8 +20,8 @@ public class UiButton extends UiComponent {
 	
 	protected boolean locked;
 	
-	private Color highlightColour;
-	private Color selectColour;
+	protected Color highlightColour;
+	protected Color selectColour;
 	
 	private Color textBaseColour;
 	private Color textHighlightColour;
@@ -92,7 +92,7 @@ public class UiButton extends UiComponent {
 	public void hover(int px, int py) {
 		super.hover(px, py);
 		
-		if(hovered) {
+		if(hovered && !locked) {
 			UiThread.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 	}
@@ -101,7 +101,7 @@ public class UiButton extends UiComponent {
 	protected void hover(int px, int py, int x, int y, int width, int height) {
 		super.hover(px, py, x, y, width, height);
 		
-		if(hovered) {
+		if(hovered && !locked) {
 			UiThread.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 	}
@@ -115,6 +115,10 @@ public class UiButton extends UiComponent {
 		}
 		
 		super.deselect();
+	}
+	
+	public void forceDeselect() {
+		selected = false;
 	}
 	
 	public void uncheck() {
@@ -138,6 +142,10 @@ public class UiButton extends UiComponent {
 	
 	public boolean isChecked() {
 		return checked;
+	}
+	
+	public boolean isLocked() {
+		return locked;
 	}
 	
 	public UiLabel getLabel() {

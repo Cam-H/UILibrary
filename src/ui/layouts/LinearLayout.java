@@ -78,5 +78,6 @@ public class LinearLayout extends RelativeLayout{
 
 		}
 		
+		requiresReposition = false;
 	}
 }

@@ -9,7 +9,7 @@ import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 import ui.nav.Direction;
 
-public class RelativeLayout implements Layout{
+public class RelativeLayout extends Layout{
 	
 	protected Direction alignment;
 	
@@ -110,7 +110,10 @@ public class RelativeLayout implements Layout{
 			components.get(i).setConstraints(constraints);
 			
 		}
-	}	
+		
+		requiresReposition = false;
+	}
+	
 	public float getComponentWidth() {
 		if(alignment == Direction.VERTICAL) {
 			return 1 - margins * 2;
@@ -129,9 +132,6 @@ public class RelativeLayout implements Layout{
 	
 	@Override
 	public List<UiComponent> getGeneratedComponents() {return new ArrayList<UiComponent>();}
-
-	@Override
-	public boolean repositionIsRequired() {return false;}
 	
 	@Override
 	public UiContainer getBounds(UiContainer container) {		

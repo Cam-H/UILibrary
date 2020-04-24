@@ -85,7 +85,7 @@ public class ScrollLayout extends RelativeLayout {
 		float scrollRange = this.scrollRange;
 		if(scrollRange == -1) {//Relative layout
 			scrollRange = margins * 2;
-			
+
 			int containerWidth = container.getWidth();
 			int containerHeight = container.getHeight();
 			
@@ -119,7 +119,7 @@ public class ScrollLayout extends RelativeLayout {
 		}
 		
 		xOffset -= (alignment == Direction.HORIZONTAL ? sliderPosition * (scrollRange - 0.99f) : 0);
-		yOffset -= (alignment == Direction.VERTICAL ? sliderPosition * (scrollRange - 0.99f) : 0);
+		yOffset -= (alignment == Direction.VERTICAL ? sliderPosition * Math.max(scrollRange - 0.99f, 0) : 0);
 
 		contentLayout.positionComponents(container, components, xOffset, yOffset);
 
@@ -147,6 +147,8 @@ public class ScrollLayout extends RelativeLayout {
 		}
 		
 		components.add(slider);
+		
+		requiresReposition = false;
 	}
 	
 	public void scroll(int wheelRotation) {
@@ -168,7 +170,7 @@ public class ScrollLayout extends RelativeLayout {
 			return true;
 		}
 		
-		return false;
+		return requiresReposition;
 	}
 	
 }

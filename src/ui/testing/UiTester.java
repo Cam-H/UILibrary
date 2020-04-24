@@ -89,7 +89,7 @@ public class UiTester extends Thread {
 		ui2.addUiComponent(new UiCheckbox(null, "Check"));
 		ui2.addUiComponent(b3 = new UiButton(null, "Test Screen"));
 		ui2.addUiComponent(b4 = new UiButton(null, "Layout Test Screen"));
-		ui2.addUiComponent(b5 = new UiButton(null, "Graph Screen"));
+		ui2.addUiComponent(b5 = new UiButton(null, "zx<b>Graph</b> <i>Screen</i>"));
 
 		UiTextField t1 = new UiTextField(null, "");
 		t1.setPlaceholder("textfield");

@@ -8,7 +8,7 @@ import ui.components.UiContainer;
 import ui.constraints.RelativeConstraint;
 import ui.constraints.UiConstraint;
 
-public class GridLayout implements Layout {
+public class GridLayout extends Layout {
 
 	protected int rows;
 	protected int cols;
@@ -76,6 +76,7 @@ public class GridLayout implements Layout {
 			
 		}
 		
+		requiresReposition = false;
 	}
 
 	@Override

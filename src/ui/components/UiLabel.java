@@ -10,6 +10,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import ui.constraints.UiConstraint;
 import ui.graphics.UiColours;
@@ -138,6 +140,8 @@ public class UiLabel extends UiComponent {
 		g.setFont(font);
 		FontMetrics metrics = g.getFontMetrics();
 		
+//		List<Str>
+		
 		BufferedImage buffer = createBuffer(metrics, title);
 		Graphics2D bufferGraphics = prepareBufferGraphics(buffer);
 		
@@ -164,8 +168,11 @@ public class UiLabel extends UiComponent {
 	
 	protected void drawTextOnBuffer(BufferedImage buffer, Graphics2D bufferGraphics, String txt, int[] selectionRange) {
 		FontMetrics metrics = bufferGraphics.getFontMetrics();
-				
-		int x = buffer.getWidth() / 2 - metrics.stringWidth(txt) / 2;
+		
+		List<String> segments = getSegments(txt);
+		int stringWidth = getStringWidth(bufferGraphics, segments);
+		
+		int x = buffer.getWidth() / 2 - stringWidth / 2;
 		int height = metrics.getAscent();
 		
 		if(selectionRange != null) {
@@ -201,10 +208,177 @@ public class UiLabel extends UiComponent {
 	        textLayout.draw(bufferGraphics, x, y);
 	        
 		}else {
-			bufferGraphics.drawString(txt, x, metrics.getHeight() / 2 + height / 2);
+			Font font = this.font;
+			int xOffset = 0;
+			
+			for(String segment : segments) {
+				bufferGraphics.setFont(new Font(font.getName(), getFontStyle(segment.charAt(0)), font.getSize()));
+				
+				bufferGraphics.drawString(segment.substring(1), x + xOffset, metrics.getHeight() / 2 + height / 2);
+				xOffset += bufferGraphics.getFontMetrics().stringWidth(segment.substring(1));
+			}
+			
 		}
 
 		bufferGraphics.dispose();
+	}
+	
+	protected int getStringWidth(Graphics2D bufferGraphics, List<String> segments) {
+		int length = 0;
+		
+		Font font = this.font;
+		
+		for(String segment : segments) {
+			int fontStyle = getFontStyle(segment.charAt(0));
+
+			bufferGraphics.setFont(new Font(font.getName(), fontStyle, font.getSize()));
+			
+			FontMetrics metrics = bufferGraphics.getFontMetrics();
+			
+			length += metrics.stringWidth(segment.substring(1));
+		}
+		
+		return length;
+	}
+	
+	protected int getFontStyle(char ID) {
+		switch(ID) {
+		case '0':
+			return Font.PLAIN;
+		case '1':
+			return Font.BOLD;
+		case '2':
+			return Font.ITALIC;
+		}
+		
+		return Font.PLAIN;
+	}
+	
+	protected List<String> getSegments(String txt) {
+		List<String> segments = new ArrayList<String>();
+		
+		addSegments(segments, "<b>", txt);
+		addSegments(segments, "<i>", txt);
+		
+		int index = 0;
+
+		while(txt.length() > 0) {
+			int i = txt.indexOf("<");			
+			
+			if(i == -1) {
+				segments.add(0 + txt);
+				return segments;
+			}else {
+				String tag = txt.substring(i, txt.indexOf(">") + 1);
+				String endTag = tag.substring(0, 1) + "/" + tag.substring(1);
+				
+				String segment = txt.substring(0, i);
+				segments.add(index + "-0" + segment);
+				txt = txt.substring(i);
+				
+				index += segment.length();
+				
+				i = txt.indexOf(endTag);
+				
+				if(i == -1) {
+					txt = "";
+				}else {
+					txt = txt.substring(i + endTag.length());
+					index += i + endTag.length();
+				}
+				
+			}
+		}
+		
+		String[] arr = new String[segments.size()];
+		for(int i = 0; i < arr.length; i++) {
+			arr[i] = segments.get(i);
+		}
+		
+		mergesort(arr, 0, arr.length - 1);
+		
+		//Remove the numbering that was used to sort the array
+		for(int i = 0; i < segments.size(); i++) {
+			segments.set(i, arr[i].substring(arr[i].indexOf("-") + 1));
+		}
+		
+		return segments;
+	}
+	
+	protected void mergesort(String[] arr, int l, int r) {
+		if(l < r) {
+			int m = l + (r - l) / 2;
+
+			mergesort(arr, l, m);
+			mergesort(arr, m + 1, r);
+
+			merge(arr, l, m, r);
+		}
+	}
+	
+	protected void merge(String[] arr, int l, int m, int r) {
+		
+		int i, j, k;
+		int n1 = m - l + 1;
+		int n2 = r - m;
+		
+		/* create temp arrays */
+		String[] L = new String[n1];
+		String[] R = new String[n2];
+		
+		/* Copy data to temp arrays L[] and R[] */
+		for(i = 0; i < n1; i++)
+			L[i] = arr[l + i];
+		for(j = 0; j < n2; j++)
+			R[j] = arr[m + 1 + j];
+		
+		i = j = 0; k = l;
+		while(i < n1 && j < n2) {
+			if(Integer.parseInt(L[i].substring(0, L[i].indexOf("-"))) < Integer.parseInt(R[j].substring(0, R[j].indexOf("-")))) {
+				arr[k] = L[i];
+				i++;
+			}else {
+				arr[k] = R[j];
+				j++;
+			}
+			
+			k++;
+		}
+		
+		while(i < n1) {
+			arr[k] = L[i];
+			i++;
+			k++;
+		}
+		
+		while(j < n2) {
+			arr[k] = R[j];
+			j++;
+			k++;
+		}
+	}
+	
+	protected String addSegments(List<String> segments, String tag, String txt) {
+		while(txt.contains(tag)) {
+			int i = txt.indexOf(tag);
+			int e = txt.indexOf(tag.substring(0, 1) + "/" + tag.substring(1));
+			
+			segments.add(i + "-" + getIDByTag(tag) + txt.substring(i + tag.length(), e));
+			txt = txt.substring(0, i) + txt.substring(e + tag.length() + 1);
+		}
+		
+		return txt;
+	}
+	
+	protected int getIDByTag(String tag) {
+		switch(tag) {
+		case "<b>":
+			return 1;
+		case "<i>":
+			return 2;
+		default:
+			return 0;
+		}
 	}
 	
 	protected void renderBuffer(BufferedImage buffer, UiContainer container, FontMetrics metrics, String txt, Graphics2D g) {

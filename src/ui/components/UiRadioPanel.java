@@ -41,6 +41,14 @@ public class UiRadioPanel extends UiPanel {
 		System.err.println("Error! Only checkboxes may be added to radio panels! " + component + " was not added!");
 	}
 	
+	public void setChecked(UiCheckbox toCheck) {
+		if(components.indexOf(toCheck) != -1) {
+			getChecked().uncheck();
+			
+			toCheck.checked = true;
+		}
+	}
+	
 	@Override
 	public void deselect() {
 		UiCheckbox checked = getChecked();
@@ -51,7 +59,7 @@ public class UiRadioPanel extends UiPanel {
 			if(((UiCheckbox)component).isChecked()) {
 				if(checked != component) {
 					checked.uncheck();
-					checked = null;
+					break;
 				}
 			}else if(checked == component) {
 				checked.checked = true;

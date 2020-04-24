@@ -14,6 +14,7 @@ import ui.control.UiThread;
 import ui.graphics.UiColours;
 import ui.layouts.FloatLayout;
 import ui.layouts.Layout;
+import ui.layouts.RelativeLayout;
 import ui.layouts.ScrollLayout;
 import ui.text.Alignment;
 import ui.transitions.UiTransition;
@@ -159,7 +160,7 @@ public class UiPanel extends UiComponent {
 	}
 	
 	public void addUiComponent(UiComponent component) {
-		if(layout instanceof RelativeConstraint) {
+		if(layout instanceof RelativeLayout) {
 			UiConstraint constraints = component.getConstraints();
 			
 			if(constraints == null) {
@@ -173,6 +174,20 @@ public class UiPanel extends UiComponent {
 		}
 		
 		components.add(component);
+	}
+	
+	public void removeUiComponent(int index) {
+		if(components.size() > index) {
+			components.remove(index);
+			
+			layout.triggerReposition();
+		}
+	}
+	
+	public void removeUiComponent(UiComponent component) {
+		components.remove(component);
+		
+		layout.triggerReposition();
 	}
 	
 	private List<UiComponent> getPresentUiComponents(){

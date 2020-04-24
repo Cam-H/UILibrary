@@ -1,5 +1,6 @@
 package ui.components;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import ui.constraints.UiConstraint;
@@ -7,18 +8,26 @@ import ui.graphics.UiColours;
 
 public class UiCheckbox extends UiButton {
 
+	private Color checkColour;
+	
 	public UiCheckbox(UiConstraint constraints) {
-		super(constraints, "");
+		this(constraints, "");
 	}
 	
 	public UiCheckbox(UiConstraint constraints, String title) {
 		super(constraints, title);
+		
+		checkColour = UiColours.WHITE;
+	}
+	
+	public void setCheckColour(Color checkColour) {
+		this.checkColour = checkColour;
 	}
 	
 	@Override
 	public void deselect() {
 		if(selected) {
-			if(hovered) {
+			if(hovered && !locked) {
 				checked = !checked;
 			}
 			
@@ -28,56 +37,24 @@ public class UiCheckbox extends UiButton {
 
 	@Override
 	public void render(Graphics2D g) {
-		g.setColor(UiColours.GRAY);
-		
-		if(hovered) {
-			g.setColor(UiColours.LIGHT_GRAY);
-		}
-		
-		if(selected) {
-			g.setColor(UiColours.CYAN);
-		}
-		
-		if(checked) {
-			g.setColor(UiColours.MAGENTA);
-		}
-		
 		super.render(g);
-		
 	}
 	
 	@Override
 	public void render(Graphics2D g, UiContainer container) {
-		g.setColor(UiColours.GRAY);
-
-		if(hovered) {
-			g.setColor(UiColours.LIGHT_GRAY);
-		}
-		
-		if(selected) {
-			g.setColor(UiColours.CYAN);
-		}
-		
-		if(checked) {
-			g.setColor(UiColours.MAGENTA);
-		}
-		
 		super.render(g, container);
 	}
 
 	@Override
 	public void assignBaseColour(Graphics2D g) {
-		
-		if(hovered) {
-			g.setColor(UiColours.LIGHT_GRAY);
-		}
-		
+		super.assignBaseColour(g);
+
 		if(checked) {
-			g.setColor(UiColours.MAGENTA);
+			g.setColor(checkColour);
 		}
 		
-		if(selected) {
-			g.setColor(UiColours.CYAN);
+		if(selected && !locked) {
+			g.setColor(selectColour);
 		}
 		
 	}
